@@ -12,9 +12,12 @@ import { TransactionsList } from "./components/TransactionsList";
 import { BalancesView } from "./components/BalancesView";
 import { ExportSettings } from "./components/ExportSettings";
 import { DeleteShieldModal } from "./components/DeleteShieldModal";
-import { LandingPageModal } from "./components/LandingPageModal";
+import { HelpPage } from "./components/HelpPage";
+import { MobileBottomNav } from "./components/MobileBottomNav";
 
-import { Plus, ListFilter, Scale, Settings, LayoutDashboard } from "lucide-react";
+import { Plus, ListFilter, Scale, Settings, LayoutDashboard, HelpCircle } from "lucide-react";
+
+type TabType = "overview" | "transactions" | "add-expense" | "balances" | "settings" | "help";
 
 // Repository instance (IndexedDB with memory fallback)
 const repository = typeof indexedDB !== "undefined"
@@ -24,11 +27,10 @@ const repository = typeof indexedDB !== "undefined"
 export function App() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSession, setActiveSession] = useState<Session | null>(null);
-  const [activeTab, setActiveTab] = useState<"overview" | "transactions" | "add-expense" | "balances" | "settings">("overview");
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
 
   // Modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isLandingPageOpen, setIsLandingPageOpen] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null);
 
   // Edit Expense State
@@ -229,17 +231,24 @@ export function App() {
   const balances = activeSession ? calculateBalances(activeSession) : [];
   const simplifiedSuggestions = simplifyBalances(balances);
 
+  const currentTab: TabType = activeTab;
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Navbar
-        onGoHome={() => setActiveSession(null)}
-        onOpenLandingPage={() => setIsLandingPageOpen(true)}
+        onGoHome={() => {
+          setActiveSession(null);
+          setActiveTab("overview");
+        }}
+        onOpenHelp={() => setActiveTab("help")}
         currentSessionName={activeSession?.name}
         autoSaveStatus={autoSaveStatus}
       />
 
       <main style={{ flex: 1 }}>
-        {!activeSession ? (
+        {currentTab === "help" ? (
+          <HelpPage onBackToApp={() => setActiveTab("overview")} />
+        ) : !activeSession ? (
           <SessionList
             sessions={sessions}
             onSelectSession={(s) => {
@@ -255,24 +264,23 @@ export function App() {
             onDeleteSessionPrompt={(s) => setSessionToDelete(s)}
           />
         ) : (
-          <div className="container" style={{ paddingTop: "1.5rem", paddingBottom: "3rem" }}>
-            {/* Session Tabs Navigation */}
-            <div className="tabs">
+          <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
+            {/* Session Desktop Tabs Navigation */}
+            <div className="tabs desktop-only">
               <button
-                className={`tab-btn ${activeTab === "overview" ? "active" : ""}`}
+                className={`tab-btn ${currentTab === "overview" ? "active" : ""}`}
                 onClick={() => setActiveTab("overview")}
               >
-
                 <LayoutDashboard size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Overview
               </button>
               <button
-                className={`tab-btn ${activeTab === "transactions" ? "active" : ""}`}
+                className={`tab-btn ${currentTab === "transactions" ? "active" : ""}`}
                 onClick={() => setActiveTab("transactions")}
               >
                 <ListFilter size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Transactions ({activeSession.expenses.length})
               </button>
               <button
-                className={`tab-btn ${activeTab === "add-expense" ? "active" : ""}`}
+                className={`tab-btn ${currentTab === "add-expense" ? "active" : ""}`}
                 onClick={() => {
                   setEditingExpense(null);
                   setActiveTab("add-expense");
@@ -281,21 +289,27 @@ export function App() {
                 <Plus size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Add Expense
               </button>
               <button
-                className={`tab-btn ${activeTab === "balances" ? "active" : ""}`}
+                className={`tab-btn ${currentTab === "balances" ? "active" : ""}`}
                 onClick={() => setActiveTab("balances")}
               >
                 <Scale size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Balances & Settlement
               </button>
               <button
-                className={`tab-btn ${activeTab === "settings" ? "active" : ""}`}
+                className={`tab-btn ${currentTab === "settings" ? "active" : ""}`}
                 onClick={() => setActiveTab("settings")}
               >
                 <Settings size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Export & Settings
               </button>
+              <button
+                className={`tab-btn ${(activeTab as string) === "help" ? "active" : ""}`}
+                onClick={() => setActiveTab("help")}
+              >
+                <HelpCircle size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Help & Guide
+              </button>
             </div>
 
             {/* Active Tab Views */}
-            {activeTab === "overview" && (
+            {currentTab === "overview" && (
               <BalancesView
                 participants={activeSession.participants}
                 balances={balances}
@@ -304,7 +318,7 @@ export function App() {
               />
             )}
 
-            {activeTab === "transactions" && (
+            {currentTab === "transactions" && (
               <TransactionsList
                 expenses={activeSession.expenses}
                 participants={activeSession.participants}
@@ -316,7 +330,7 @@ export function App() {
               />
             )}
 
-            {activeTab === "add-expense" && (
+            {currentTab === "add-expense" && (
               <ExpenseForm
                 participants={activeSession.participants}
                 initialExpense={editingExpense || undefined}
@@ -325,7 +339,7 @@ export function App() {
               />
             )}
 
-            {activeTab === "balances" && (
+            {currentTab === "balances" && (
               <BalancesView
                 participants={activeSession.participants}
                 balances={balances}
@@ -334,7 +348,7 @@ export function App() {
               />
             )}
 
-            {activeTab === "settings" && (
+            {currentTab === "settings" && (
               <ExportSettings
                 session={activeSession}
                 onUpdateSessionName={handleRenameSession}
@@ -351,6 +365,18 @@ export function App() {
         )}
       </main>
 
+      {/* Mobile-First Bottom Navigation Bar */}
+      <MobileBottomNav
+        activeTab={currentTab}
+        onTabChange={(tab) => {
+          if (tab === "add-expense") {
+            setEditingExpense(null);
+          }
+          setActiveTab(tab);
+        }}
+        hasActiveSession={Boolean(activeSession)}
+      />
+
       {/* Modals */}
       <CreateSessionModal
         isOpen={isCreateModalOpen}
@@ -363,12 +389,6 @@ export function App() {
         isOpen={Boolean(sessionToDelete)}
         onClose={() => setSessionToDelete(null)}
         onConfirmDelete={handleConfirmDelete}
-      />
-
-      <LandingPageModal
-        isOpen={isLandingPageOpen}
-        onClose={() => setIsLandingPageOpen(false)}
-        onStartSession={() => setIsCreateModalOpen(true)}
       />
     </div>
   );

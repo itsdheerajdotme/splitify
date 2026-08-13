@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <rect width="512" height="512" rx="110" fill="#0f172a"/>
+  <!-- Split Outer Ring -->
+  <path d="M 256 64 A 192 192 0 0 1 448 240 L 64 240 A 192 192 0 0 1 256 64 Z" fill="#94a3b8" opacity="0.35"/>
+  <path d="M 256 448 A 192 192 0 0 1 64 272 L 448 272 A 192 192 0 0 1 256 448 Z" fill="#94a3b8" opacity="0.35"/>
+  <!-- Emerald Bolt -->
+  <path d="M 310 48 L 220 220 L 330 220 L 200 464 L 270 272 L 170 272 Z" fill="#10b981" stroke="#0f172a" stroke-width="8"/>
+</svg>

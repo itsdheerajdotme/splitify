@@ -1,48 +1,47 @@
 import React from "react";
-import { Zap, Layout, ShieldCheck, Sparkles } from "lucide-react";
+import siteConfig from "../config/site.json";
+import { Layout, ShieldCheck, HelpCircle } from "lucide-react";
 
 interface NavbarProps {
   onGoHome: () => void;
-  onOpenLandingPage: () => void;
+  onOpenHelp: () => void;
   currentSessionName?: string;
   autoSaveStatus?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onGoHome,
-  onOpenLandingPage,
+  onOpenHelp,
   currentSessionName,
   autoSaveStatus = "Saved locally",
 }) => {
   return (
-    <header style={{ backgroundColor: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+    <header style={{ backgroundColor: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)", position: "sticky", top: 0, zIndex: 800 }}>
       <div className="container flex items-center justify-between" style={{ height: "64px" }}>
+        {/* Brand Logo & Name */}
         <div className="flex items-center gap-3" style={{ cursor: "pointer" }} onClick={onGoHome}>
-          <div
+          <img
+            src="/logo-64.png"
+            alt={siteConfig.name}
             style={{
               width: "36px",
               height: "36px",
               borderRadius: "10px",
-              backgroundColor: "var(--accent-primary)",
-              color: "var(--text-inverse)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 800,
+              objectFit: "cover",
+              border: "1px solid var(--border-subtle)",
             }}
-          >
-            <Zap size={20} />
-          </div>
+          />
           <div>
             <h2 style={{ fontSize: "1.25rem", lineHeight: 1 }}>
-              Splitify <span style={{ fontSize: "0.75rem", color: "var(--accent-primary)", fontWeight: 600 }}>MVP</span>
+              {siteConfig.name} <span style={{ fontSize: "0.75rem", color: "var(--accent-primary)", fontWeight: 600 }}>MVP</span>
             </h2>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Zero-Backend Expense Splitter</p>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>{siteConfig.tagline}</p>
           </div>
         </div>
 
+        {/* Active Session Status Badge */}
         {currentSessionName && (
-          <div className="flex items-center gap-2" style={{ backgroundColor: "var(--bg-input)", padding: "0.35rem 0.85rem", borderRadius: "9999px", border: "1px solid var(--border-subtle)" }}>
+          <div className="flex items-center gap-2 desktop-only" style={{ backgroundColor: "var(--bg-input)", padding: "0.35rem 0.85rem", borderRadius: "9999px", border: "1px solid var(--border-subtle)" }}>
             <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>{currentSessionName}</span>
             <span className="badge badge-emerald flex items-center gap-1" style={{ fontSize: "0.7rem" }}>
               <ShieldCheck size={12} /> {autoSaveStatus}
@@ -50,12 +49,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         )}
 
-        <div className="flex items-center gap-3">
-          <button className="btn btn-outline btn-sm" onClick={onOpenLandingPage}>
-            <Sparkles size={16} color="var(--accent-primary)" /> Landing Page Concept
+        {/* Right Navigation Actions */}
+        <div className="flex items-center gap-2">
+          <button className="btn btn-outline btn-sm" onClick={onOpenHelp}>
+            <HelpCircle size={16} color="var(--accent-primary)" /> <span className="desktop-only">Help & Guide</span>
           </button>
           <button className="btn btn-secondary btn-sm" onClick={onGoHome}>
-            <Layout size={16} /> My Sessions
+            <Layout size={16} /> <span className="desktop-only">My Sessions</span>
           </button>
         </div>
       </div>
