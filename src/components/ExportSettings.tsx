@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Session } from "../domain/types";
 import { downloadFile, exportSessionToCsv, exportSessionToJson, importSessionFromJson } from "../services/export-import";
-import { FileSpreadsheet, Download, Upload, Trash2, UserPlus, Users, Edit2, Share2 } from "lucide-react";
+import { FileSpreadsheet, Download, Upload, Trash2, UserPlus, Users, Edit2, Share2, Smartphone, RefreshCw, CheckCircle2 } from "lucide-react";
 import { ShareModal } from "./ShareModal";
 
 interface ExportSettingsProps {
@@ -12,6 +12,11 @@ interface ExportSettingsProps {
   onRemoveParticipant: (participantId: string) => void;
   onRestoreSession: (importedSession: Session) => void;
   onOpenDeleteModal: () => void;
+  isCheckingUpdate?: boolean;
+  lastCheckMessage?: string | null;
+  onCheckForUpdates?: () => Promise<boolean>;
+  onApplyUpdate?: () => void;
+  hasUpdate?: boolean;
 }
 
 export const ExportSettings: React.FC<ExportSettingsProps> = ({
@@ -22,6 +27,11 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
   onRemoveParticipant,
   onRestoreSession,
   onOpenDeleteModal,
+  isCheckingUpdate = false,
+  lastCheckMessage,
+  onCheckForUpdates,
+  onApplyUpdate,
+  hasUpdate = false,
 }) => {
   const [sessionNameInput, setSessionNameInput] = useState(session.name);
   const [newParticipantName, setNewParticipantName] = useState("");
@@ -195,6 +205,49 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
         </div>
       </div>
 
+      {/* App Version & Offline PWA Status */}
+      <div className="card">
+        <div className="flex items-center justify-between" style={{ marginBottom: "0.75rem", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div className="flex items-center gap-2">
+            <Smartphone size={20} color="var(--accent-primary)" />
+            <h4 style={{ fontSize: "1.1rem" }}>App Version & Offline Status</h4>
+          </div>
+          <span className="badge badge-emerald flex items-center gap-1" style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem" }}>
+            <CheckCircle2 size={12} /> 100% Offline Ready
+          </span>
+        </div>
+
+        <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "1rem" }}>
+          Splitify caches application files automatically in your browser. When online, it checks for updates once a day.
+        </p>
+
+        <div className="flex items-center justify-between" style={{ backgroundColor: "var(--bg-input)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
+          <div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600 }}>Splitify PWA v1.0.0</div>
+            {lastCheckMessage && (
+              <div style={{ fontSize: "0.75rem", color: "var(--accent-primary)", marginTop: "0.15rem" }}>
+                {lastCheckMessage}
+              </div>
+            )}
+          </div>
+
+          {hasUpdate ? (
+            <button className="btn btn-primary btn-sm" onClick={onApplyUpdate} style={{ backgroundColor: "#0284c7" }}>
+              <RefreshCw size={14} /> Update Now
+            </button>
+          ) : (
+            <button
+              className="btn btn-outline btn-sm"
+              onClick={onCheckForUpdates}
+              disabled={isCheckingUpdate}
+            >
+              <RefreshCw size={14} className={isCheckingUpdate ? "spin-slow" : ""} />
+              {isCheckingUpdate ? "Checking..." : "Check for Updates"}
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Share & Backup Section */}
       <div className="card">
         <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>Share & Export Data</h4>
@@ -258,3 +311,4 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
     </div>
   );
 };
+

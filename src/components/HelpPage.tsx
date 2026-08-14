@@ -1,12 +1,28 @@
 import React, { useState } from "react";
 import siteConfig from "../config/site.json";
-import { Zap, ShieldCheck, Mail, Phone, ChevronDown, ChevronUp } from "lucide-react";
+import { Zap, ShieldCheck, Mail, Phone, ChevronDown, ChevronUp, Smartphone, Download, RefreshCw } from "lucide-react";
 
 interface HelpPageProps {
   onBackToApp: () => void;
+  isInstallable?: boolean;
+  isInstalled?: boolean;
+  onPromptInstall?: () => void;
+  isCheckingUpdate?: boolean;
+  onCheckForUpdates?: () => Promise<boolean>;
+  hasUpdate?: boolean;
+  onApplyUpdate?: () => void;
 }
 
-export const HelpPage: React.FC<HelpPageProps> = ({ onBackToApp }) => {
+export const HelpPage: React.FC<HelpPageProps> = ({
+  onBackToApp,
+  isInstallable = false,
+  isInstalled = false,
+  onPromptInstall,
+  isCheckingUpdate = false,
+  onCheckForUpdates,
+  hasUpdate = false,
+  onApplyUpdate,
+}) => {
   const [openSection, setOpenSection] = useState<number | null>(1);
 
   const toggleSection = (id: number) => {
@@ -24,7 +40,7 @@ export const HelpPage: React.FC<HelpPageProps> = ({ onBackToApp }) => {
         />
         <h1 style={{ fontSize: "1.85rem", marginBottom: "0.5rem" }}>How To Use {siteConfig.name}</h1>
         <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", maxWidth: "550px", margin: "0 auto 1.25rem" }}>
-          Step-by-step guide on creating trips, adding expenses across 4 split methods, simplifying debt, and backing up your data offline.
+          Step-by-step guide on creating trips, adding expenses across 4 split methods, installing home screen app, and working 100% offline.
         </p>
         <button className="btn btn-primary" onClick={onBackToApp}>
           <Zap size={16} /> Open {siteConfig.name} App
@@ -243,6 +259,72 @@ export const HelpPage: React.FC<HelpPageProps> = ({ onBackToApp }) => {
                 <li><strong>Complete Ownership & Control</strong>: You are in full control of your data. Export CSVs or JSON backups anytime, or wipe data with a single click.</li>
                 <li><strong>Private Temporary Sharing</strong>: When you generate a share link, a temporary copy is kept for 24 hours so your friends can import it, after which it automatically deletes itself forever.</li>
               </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Step 8: PWA Installation & Offline Support */}
+        <div className="card" style={{ borderColor: "rgba(59, 130, 246, 0.3)", backgroundColor: "rgba(59, 130, 246, 0.04)" }}>
+          <div
+            className="flex items-center justify-between"
+            style={{ cursor: "pointer" }}
+            onClick={() => toggleSection(8)}
+          >
+            <div className="flex items-center gap-3">
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: "rgba(59, 130, 246, 0.15)", color: "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>
+                8
+              </div>
+              <h3 style={{ fontSize: "1.1rem", color: "var(--text-main)" }}>📱 Installing PWA & Offline Home Screen Shortcut</h3>
+            </div>
+            {openSection === 8 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
+
+          {openSection === 8 && (
+            <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)", fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              <p style={{ marginBottom: "0.75rem" }}>
+                You can install Splitify directly onto your iPhone, Android phone, or computer to use it as a native app that works <strong>100% offline with zero internet access required</strong>:
+              </p>
+
+              <div className="flex flex-col gap-3" style={{ marginBottom: "1rem" }}>
+                <div style={{ backgroundColor: "var(--bg-input)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
+                  <strong style={{ color: "var(--text-main)", display: "block", marginBottom: "0.25rem" }}>🤖 Android & Desktop (Chrome / Edge / Brave):</strong>
+                  Click the <strong>Install App</strong> button in the top navigation bar or home screen banner. Select <em>Install</em> when prompted by your browser.
+                </div>
+
+                <div style={{ backgroundColor: "var(--bg-input)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
+                  <strong style={{ color: "var(--text-main)", display: "block", marginBottom: "0.25rem" }}>🍏 iPhone & iPad (Safari):</strong>
+                  Tap the <strong>Share</strong> button (icon with square & arrow up ↗️) in the Safari bottom bar, scroll down, and select <strong>Add to Home Screen ➕</strong>.
+                </div>
+
+                <div style={{ backgroundColor: "var(--bg-input)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
+                  <strong style={{ color: "var(--text-main)", display: "block", marginBottom: "0.25rem" }}>🔄 Automatic Version Updates:</strong>
+                  Whenever your phone connects to the internet, Splitify checks for updates once a day in the background. If a new version is ready, an <strong>Update Now</strong> prompt appears.
+                </div>
+              </div>
+
+              {/* Action Buttons inside Help Guide */}
+              <div className="flex items-center gap-3 flex-wrap" style={{ marginTop: "1rem", paddingTop: "0.75rem", borderTop: "1px dashed var(--border-subtle)" }}>
+                {hasUpdate ? (
+                  <button className="btn btn-primary" onClick={onApplyUpdate} style={{ backgroundColor: "#0284c7" }}>
+                    <RefreshCw size={16} /> Update Ready — Reload Now
+                  </button>
+                ) : isInstallable && !isInstalled && onPromptInstall ? (
+                  <button className="btn btn-primary" onClick={onPromptInstall}>
+                    <Download size={16} /> Install Splitify App Now
+                  </button>
+                ) : (
+                  <span className="badge badge-emerald flex items-center gap-1" style={{ fontSize: "0.8rem", padding: "0.3rem 0.6rem" }}>
+                    <Smartphone size={14} /> App Installed / Ready Offline
+                  </span>
+                )}
+
+                {onCheckForUpdates && (
+                  <button className="btn btn-outline" onClick={onCheckForUpdates} disabled={isCheckingUpdate}>
+                    <RefreshCw size={14} className={isCheckingUpdate ? "spin-slow" : ""} />
+                    {isCheckingUpdate ? "Checking..." : "Check for Updates"}
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>

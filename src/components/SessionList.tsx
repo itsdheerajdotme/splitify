@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Session } from "../domain/types";
 import { formatCurrency, importSessionFromJson } from "../services/export-import";
-import { Plus, Upload, Calendar, Users, FileText, ChevronRight, Trash2, Search } from "lucide-react";
+import { Plus, Upload, Calendar, Users, FileText, ChevronRight, Trash2, Search, Smartphone, Download } from "lucide-react";
 
 interface SessionListProps {
   sessions: Session[];
@@ -9,6 +9,9 @@ interface SessionListProps {
   onOpenCreateModal: () => void;
   onRestoreSession: (importedSession: Session) => void;
   onDeleteSessionPrompt: (session: Session) => void;
+  isInstallable?: boolean;
+  isInstalled?: boolean;
+  onPromptInstall?: () => void;
 }
 
 export const SessionList: React.FC<SessionListProps> = ({
@@ -17,6 +20,9 @@ export const SessionList: React.FC<SessionListProps> = ({
   onOpenCreateModal,
   onRestoreSession,
   onDeleteSessionPrompt,
+  isInstallable = false,
+  isInstalled = false,
+  onPromptInstall,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +50,49 @@ export const SessionList: React.FC<SessionListProps> = ({
 
   return (
     <div className="container" style={{ paddingTop: "1rem", paddingBottom: "3rem" }}>
+      {/* PWA Home Screen Installation Card */}
+      {isInstallable && !isInstalled && onPromptInstall && (
+        <div
+          className="card flex items-center justify-between"
+          style={{
+            backgroundColor: "rgba(30, 41, 59, 0.6)",
+            borderColor: "rgba(59, 130, 246, 0.3)",
+            marginBottom: "1rem",
+            padding: "0.85rem 1rem",
+            flexWrap: "wrap",
+            gap: "0.75rem",
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "10px",
+                backgroundColor: "rgba(59, 130, 246, 0.15)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Smartphone size={22} color="#3b82f6" />
+            </div>
+            <div>
+              <strong style={{ fontSize: "0.95rem", display: "block" }}>
+                Add Splitify to Home Screen
+              </strong>
+              <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                Install shortcut for instant 100% offline access with zero internet required.
+              </span>
+            </div>
+          </div>
+          <button className="btn btn-primary btn-sm" onClick={onPromptInstall}>
+            <Download size={14} /> Add App Shortcut
+          </button>
+        </div>
+      )}
+
       {/* Compact Header Bar */}
       <div className="card flex items-center justify-between" style={{ backgroundColor: "var(--bg-input)", marginBottom: "1rem", padding: "0.85rem 1rem", flexWrap: "wrap", gap: "0.75rem" }}>
         <div>

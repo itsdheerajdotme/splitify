@@ -1,12 +1,17 @@
 import React from "react";
 import siteConfig from "../config/site.json";
-import { Layout, ShieldCheck, HelpCircle } from "lucide-react";
+import { Layout, ShieldCheck, HelpCircle, Download, RefreshCw } from "lucide-react";
 
 interface NavbarProps {
   onGoHome: () => void;
   onOpenHelp: () => void;
   currentSessionName?: string;
   autoSaveStatus?: string;
+  isInstallable?: boolean;
+  isInstalled?: boolean;
+  hasUpdate?: boolean;
+  onPromptInstall?: () => void;
+  onApplyUpdate?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -14,6 +19,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenHelp,
   currentSessionName,
   autoSaveStatus = "Saved locally",
+  isInstallable = false,
+  isInstalled = false,
+  hasUpdate = false,
+  onPromptInstall,
+  onApplyUpdate,
 }) => {
   return (
     <header style={{ backgroundColor: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)", position: "sticky", top: 0, zIndex: 800 }}>
@@ -34,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
           <div className="min-w-0">
             <h2 className="truncate" style={{ fontSize: "1.1rem", lineHeight: 1.1 }}>
-              {siteConfig.name} <span style={{ fontSize: "0.65rem", color: "var(--accent-primary)", fontWeight: 700, verticalAlign: "middle" }}>MVP</span>
+              {siteConfig.name} <span style={{ fontSize: "0.65rem", color: "var(--accent-primary)", fontWeight: 700, verticalAlign: "middle" }}>PWA</span>
             </h2>
             <p className="hide-mobile truncate" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{siteConfig.tagline}</p>
           </div>
@@ -50,16 +60,40 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         )}
 
-        {/* Header Right Action Icons */}
-        <div className="flex items-center gap-1.5" style={{ flexShrink: 0 }}>
-          <button className="btn btn-outline btn-sm btn-icon" onClick={onOpenHelp} title="Help & Guide">
-            <HelpCircle size={18} color="var(--accent-primary)" />
+        {/* Header Right Action Navigation Buttons */}
+        <div className="flex items-center gap-2" style={{ flexShrink: 0 }}>
+          {hasUpdate ? (
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={onApplyUpdate}
+              title="Update to Newest Version"
+              style={{ backgroundColor: "#0284c7" }}
+            >
+              <RefreshCw size={15} />
+              <span>Update Ready</span>
+            </button>
+          ) : isInstallable && !isInstalled && onPromptInstall ? (
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={onPromptInstall}
+              title="Install Splitify App"
+            >
+              <Download size={15} />
+              <span>Install App</span>
+            </button>
+          ) : null}
+
+          <button className="btn btn-outline btn-sm" onClick={onOpenHelp} title="Help & Guide">
+            <HelpCircle size={16} color="var(--accent-primary)" />
+            <span className="hide-mobile">Help & Guide</span>
           </button>
-          <button className="btn btn-secondary btn-sm btn-icon" onClick={onGoHome} title="My Sessions">
-            <Layout size={18} />
+          <button className="btn btn-secondary btn-sm" onClick={onGoHome} title="My Trips">
+            <Layout size={16} />
+            <span className="hide-mobile">My Trips</span>
           </button>
         </div>
       </div>
     </header>
   );
 };
+

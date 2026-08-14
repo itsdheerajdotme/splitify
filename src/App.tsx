@@ -15,6 +15,10 @@ import { DeleteShieldModal } from "./components/DeleteShieldModal";
 import { HelpPage } from "./components/HelpPage";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { NavTabs } from "./components/NavTabs";
+import { PWAInstallBanner } from "./components/PWAInstallBanner";
+
+import { usePWAInstall } from "./hooks/usePWAInstall";
+import { useServiceWorkerUpdate } from "./hooks/useServiceWorkerUpdate";
 
 import { ImportModal } from "./components/ImportModal";
 
@@ -29,6 +33,10 @@ export function App() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSession, setActiveSession] = useState<Session | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
+
+  // PWA & Service Worker hooks
+  const pwaInstall = usePWAInstall();
+  const swUpdate = useServiceWorkerUpdate();
 
   // Shared Trip Link state
   const [pendingShareId, setPendingShareId] = useState<string | null>(null);
@@ -255,6 +263,17 @@ export function App() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <PWAInstallBanner
+        isInstallable={pwaInstall.isInstallable}
+        isInstalled={pwaInstall.isInstalled}
+        isIOS={pwaInstall.isIOS}
+        showIOSGuide={pwaInstall.showIOSGuide}
+        onCloseIOSGuide={() => pwaInstall.setShowIOSGuide(false)}
+        onPromptInstall={pwaInstall.promptInstall}
+        hasUpdate={swUpdate.hasUpdate}
+        onApplyUpdate={swUpdate.applyUpdate}
+      />
+
       <Navbar
         onGoHome={() => {
           setActiveSession(null);
@@ -263,11 +282,25 @@ export function App() {
         onOpenHelp={() => setActiveTab("help")}
         currentSessionName={activeSession?.name}
         autoSaveStatus={autoSaveStatus}
+        isInstallable={pwaInstall.isInstallable}
+        isInstalled={pwaInstall.isInstalled}
+        hasUpdate={swUpdate.hasUpdate}
+        onPromptInstall={pwaInstall.promptInstall}
+        onApplyUpdate={swUpdate.applyUpdate}
       />
 
       <main style={{ flex: 1 }}>
         {currentTab === "help" ? (
-          <HelpPage onBackToApp={() => setActiveTab("overview")} />
+          <HelpPage
+            onBackToApp={() => setActiveTab("overview")}
+            isInstallable={pwaInstall.isInstallable}
+            isInstalled={pwaInstall.isInstalled}
+            onPromptInstall={pwaInstall.promptInstall}
+            isCheckingUpdate={swUpdate.isChecking}
+            onCheckForUpdates={swUpdate.checkForUpdates}
+            hasUpdate={swUpdate.hasUpdate}
+            onApplyUpdate={swUpdate.applyUpdate}
+          />
         ) : !activeSession ? (
           <SessionList
             sessions={sessions}
@@ -282,6 +315,9 @@ export function App() {
               setActiveTab("overview");
             }}
             onDeleteSessionPrompt={(s) => setSessionToDelete(s)}
+            isInstallable={pwaInstall.isInstallable}
+            isInstalled={pwaInstall.isInstalled}
+            onPromptInstall={pwaInstall.promptInstall}
           />
         ) : (
           <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
@@ -348,6 +384,11 @@ export function App() {
                   await saveActiveSession(imported);
                 }}
                 onOpenDeleteModal={() => setSessionToDelete(activeSession)}
+                isCheckingUpdate={swUpdate.isChecking}
+                lastCheckMessage={swUpdate.lastCheckMessage}
+                onCheckForUpdates={swUpdate.checkForUpdates}
+                onApplyUpdate={swUpdate.applyUpdate}
+                hasUpdate={swUpdate.hasUpdate}
               />
             )}
           </div>
