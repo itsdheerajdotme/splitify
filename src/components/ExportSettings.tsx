@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Session } from "../domain/types";
 import { downloadFile, exportSessionToCsv, exportSessionToJson, importSessionFromJson } from "../services/export-import";
-import { FileSpreadsheet, Download, Upload, Trash2, UserPlus, Users, Edit2 } from "lucide-react";
+import { FileSpreadsheet, Download, Upload, Trash2, UserPlus, Users, Edit2, Share2 } from "lucide-react";
+import { ShareModal } from "./ShareModal";
 
 interface ExportSettingsProps {
   session: Session;
@@ -57,6 +58,8 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
     };
     reader.readAsText(file);
   };
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6" style={{ maxWidth: "800px", margin: "0 auto" }}>
@@ -192,12 +195,29 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
         </div>
       </div>
 
-      {/* CSV & JSON Export & Import Section */}
+      {/* Share & Backup Section */}
       <div className="card">
-        <h4 style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>Export & Backup Data</h4>
-        <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "1rem" }}>
-          All data lives in your local browser storage. Export reports or backup files to safely keep your records.
+        <h4 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>Share & Export Data</h4>
+        <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "1.25rem" }}>
+          Share your trip session via a 24-hour temporary link, or export CSV and JSON backups.
         </p>
+
+        {/* Share Button Highlight */}
+        <div style={{ marginBottom: "1.25rem", padding: "1rem", backgroundColor: "rgba(99, 102, 241, 0.08)", borderRadius: "var(--radius-md)", border: "1px solid rgba(99, 102, 241, 0.2)" }}>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)", marginBottom: "0.25rem" }}>
+                Temporary Share Link (24 Hours)
+              </div>
+              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                Generates a web link to quickly send this trip session to friends.
+              </div>
+            </div>
+            <button className="btn btn-primary" onClick={() => setIsShareModalOpen(true)} style={{ whiteSpace: "nowrap" }}>
+              <Share2 size={16} /> Share Trip Link
+            </button>
+          </div>
+        </div>
 
         <div className="grid-2">
           <button className="btn btn-secondary" onClick={handleExportCsv}>
@@ -221,6 +241,8 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
           </button>
         </div>
       </div>
+
+      <ShareModal session={session} isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
 
       {/* Danger Zone: Session Deletion */}
       <div className="card" style={{ borderColor: "var(--color-danger-bg)", backgroundColor: "rgba(239, 68, 68, 0.05)" }}>

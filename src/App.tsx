@@ -16,6 +16,8 @@ import { HelpPage } from "./components/HelpPage";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { NavTabs } from "./components/NavTabs";
 
+import { ImportModal } from "./components/ImportModal";
+
 type TabType = "overview" | "transactions" | "add-expense" | "balances" | "settings" | "help";
 
 // Repository instance (IndexedDB with memory fallback)
@@ -28,6 +30,9 @@ export function App() {
   const [activeSession, setActiveSession] = useState<Session | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
 
+  // Shared Trip Link state
+  const [pendingShareId, setPendingShareId] = useState<string | null>(null);
+
   // Modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null);
@@ -38,10 +43,26 @@ export function App() {
   // Auto-save feedback
   const [autoSaveStatus, setAutoSaveStatus] = useState("Saved locally");
 
-  // Load sessions from repository on mount
+  // Load sessions & check for share link parameters on mount
   useEffect(() => {
     loadSessions();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareParam = urlParams.get("share");
+    if (shareParam) {
+      setPendingShareId(shareParam);
+    }
   }, []);
+
+  const handleCloseImportModal = () => {
+    setPendingShareId(null);
+    // Clean URL query parameter without page reload
+    if (window.history && window.history.replaceState) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("share");
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+    }
+  };
 
   const loadSessions = async () => {
     try {
@@ -357,6 +378,17 @@ export function App() {
         isOpen={Boolean(sessionToDelete)}
         onClose={() => setSessionToDelete(null)}
         onConfirmDelete={handleConfirmDelete}
+      />
+
+      <ImportModal
+        shareId={pendingShareId}
+        isOpen={Boolean(pendingShareId)}
+        onClose={handleCloseImportModal}
+        onImportSession={async (imported) => {
+          await saveActiveSession(imported);
+          setActiveSession(imported);
+          setActiveTab("overview");
+        }}
       />
     </div>
   );

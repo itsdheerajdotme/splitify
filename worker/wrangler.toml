@@ -1,0 +1,9 @@
+name = "splitify-share-worker"
+main = "index.ts"
+compatibility_date = "2024-01-01"
+
+# KV Namespace Binding for storing temporary share payloads
+# Replace id with your KV Namespace ID after running: npx wrangler kv:namespace create TRIP_KV
+kv_namespaces = [
+  { binding = "TRIP_KV", id = "YOUR_KV_NAMESPACE_ID" }
+]
