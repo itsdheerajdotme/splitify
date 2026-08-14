@@ -22,31 +22,49 @@ export function initAnalytics(measurementIdOverride?: string): void {
 
   const cleanId = measurementId.trim();
 
-  // Prevent duplicate script injection
+  // 1. Setup dataLayer & global gtag function FIRST before injecting script
+  window.dataLayer = window.dataLayer || [];
+  if (typeof window.gtag !== "function") {
+    // Standard Google Analytics gtag implementation MUST push the arguments object
+    window.gtag = function gtag() {
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer?.push(arguments);
+    };
+  }
+
+  // 2. Queue initial config & pageview commands in dataLayer
+  window.gtag("js", new Date());
+  window.gtag("config", cleanId, {
+    send_page_view: true,
+  });
+
+  // 3. Prevent duplicate script tag injection
   if (document.getElementById(`ga-script-${cleanId}`)) {
     return;
   }
 
-  // 1. Inject gtag.js script tag dynamically
+  // 4. Inject gtag.js script tag dynamically into head
   const script = document.createElement("script");
   script.id = `ga-script-${cleanId}`;
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${cleanId}`;
   document.head.appendChild(script);
 
-  // 2. Setup dataLayer & gtag global function
-  window.dataLayer = window.dataLayer || [];
-  function gtag(...args: any[]) {
-    window.dataLayer?.push(args);
-  }
-  window.gtag = gtag;
-
-  gtag("js", new Date());
-  gtag("config", cleanId, {
-    anonymize_ip: true,
-  });
-
   console.log(`[Analytics] Google Analytics initialized with ID: ${cleanId}`);
+}
+
+/**
+ * Sends a custom page_view event to GA4 when navigating client-side.
+ */
+export function trackPageView(pagePath: string, pageTitle?: string): void {
+  const cleanId = siteConfig.analytics?.googleAnalyticsId?.trim();
+  if (!cleanId || typeof window.gtag !== "function") return;
+
+  window.gtag("config", cleanId, {
+    page_path: pagePath,
+    page_title: pageTitle || document.title,
+    send_page_view: true,
+  });
 }
 
 /**

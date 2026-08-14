@@ -1,4 +1,5 @@
 import seoConfig from "../config/seo.json";
+import { trackPageView } from "../services/analytics";
 
 export interface SEOPageData {
   path: string;
@@ -83,7 +84,7 @@ function setJsonLd(schema: Record<string, unknown>) {
 }
 
 /**
- * Apply SEO tags dynamically to document head
+ * Apply SEO tags dynamically to document head & track pageview in Google Analytics
  */
 export function applySEO(pageKeyOrPath: SEOPageKey | string): SEOPageData {
   let pageData: SEOPageData;
@@ -125,6 +126,9 @@ export function applySEO(pageKeyOrPath: SEOPageKey | string): SEOPageData {
 
   // JSON-LD Structured Data
   setJsonLd(pageData.jsonLd);
+
+  // Trigger Google Analytics PageView event
+  trackPageView(pageData.path, pageData.title);
 
   return pageData;
 }
