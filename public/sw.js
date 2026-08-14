@@ -11,8 +11,9 @@ const STATIC_ASSETS = [
   '/logo-512.png',
 ];
 
-// Install Event - Pre-cache core app shell
+// Install Event - Pre-cache core app shell & activate immediately
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS);
@@ -20,7 +21,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event - Clean up stale caches
+// Activate Event - Clean up stale caches & claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -35,7 +36,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event - Stale-while-revalidate strategy for assets, Network-first for navigation
+// Fetch Event - Offline-first caching for assets & resilient navigation fallback
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
@@ -49,41 +50,74 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Navigation requests (HTML pages)
-  if (request.mode === 'navigate') {
+  // Navigation requests (HTML pages / Pull-to-Refresh)
+  if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
-      fetch(request)
-        .then((networkResponse) => {
+      (async () => {
+        try {
+          // Try network first
+          const networkResponse = await fetch(request);
           if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(request, networkResponse.clone());
+            cache.put('/', networkResponse.clone());
+            cache.put('/index.html', networkResponse.clone());
           }
           return networkResponse;
-        })
-        .catch(() => {
-          return caches.match('/index.html') || caches.match(request);
-        })
+        } catch (err) {
+          // Offline fallback logic for navigation / pull-to-refresh
+          const cachedRequest = await caches.match(request);
+          if (cachedRequest) return cachedRequest;
+
+          const cachedRoot = await caches.match('/');
+          if (cachedRoot) return cachedRoot;
+
+          const cachedIndex = await caches.match('/index.html');
+          if (cachedIndex) return cachedIndex;
+
+          return new Response('Offline', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({ 'Content-Type': 'text/html' }),
+          });
+        }
+      })()
     );
     return;
   }
 
-  // Assets & JS/CSS requests (Stale-While-Revalidate)
+  // Assets & JS/CSS/Image requests (Cache-First with Network Fallback & Revalidation)
   event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const fetchPromise = fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // Silent fallback if offline
-        });
+    (async () => {
+      const cachedResponse = await caches.match(request);
 
-      return cachedResponse || fetchPromise;
-    })
+      if (cachedResponse) {
+        // Revalidate in background if online
+        fetch(request)
+          .then(async (networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const cache = await caches.open(CACHE_NAME);
+              cache.put(request, networkResponse);
+            }
+          })
+          .catch(() => {});
+
+        return cachedResponse;
+      }
+
+      // If not in cache, fetch from network and cache it
+      try {
+        const networkResponse = await fetch(request);
+        if (networkResponse && networkResponse.status === 200) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(request, networkResponse.clone());
+        }
+        return networkResponse;
+      } catch (err) {
+        // Fallback for missing images/assets
+        return new Response('', { status: 404, statusText: 'Not Found' });
+      }
+    })()
   );
 });
 
