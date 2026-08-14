@@ -215,6 +215,37 @@ export const HelpPage: React.FC<HelpPageProps> = ({ onBackToApp }) => {
             </div>
           )}
         </div>
+
+        {/* Step 7 */}
+        <div className="card" style={{ borderColor: "rgba(16, 185, 129, 0.3)", backgroundColor: "rgba(16, 185, 129, 0.04)" }}>
+          <div
+            className="flex items-center justify-between"
+            style={{ cursor: "pointer" }}
+            onClick={() => toggleSection(7)}
+          >
+            <div className="flex items-center gap-3">
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "#10b981", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>
+                7
+              </div>
+              <h3 style={{ fontSize: "1.1rem", color: "var(--text-main)" }}>Privacy-First & Local Storage</h3>
+            </div>
+            {openSection === 7 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
+
+          {openSection === 7 && (
+            <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)", fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              <p style={{ marginBottom: "0.75rem" }}>
+                Splitify is built with a strict <strong>Privacy-First Philosophy</strong>:
+              </p>
+              <ul style={{ paddingLeft: "1.25rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <li><strong>Stored in Your Browser</strong>: All your trip names, friends, and expenses stay saved directly inside your phone or computer browser.</li>
+                <li><strong>No Login Required</strong>: No accounts, no emails, no passwords, and no tracking. You can start splitting expenses in 5 seconds.</li>
+                <li><strong>Complete Ownership & Control</strong>: You are in full control of your data. Export CSVs or JSON backups anytime, or wipe data with a single click.</li>
+                <li><strong>Private Temporary Sharing</strong>: When you generate a share link, a temporary copy is kept for 24 hours so your friends can import it, after which it automatically deletes itself forever.</li>
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Support & Privacy Footer */}
