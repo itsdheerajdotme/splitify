@@ -17,45 +17,46 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   return (
     <header style={{ backgroundColor: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)", position: "sticky", top: 0, zIndex: 800 }}>
-      <div className="container flex items-center justify-between" style={{ height: "64px" }}>
+      <div className="container flex items-center justify-between" style={{ height: "56px" }}>
         {/* Brand Logo & Name */}
-        <div className="flex items-center gap-3" style={{ cursor: "pointer" }} onClick={onGoHome}>
+        <div className="flex items-center gap-2" style={{ cursor: "pointer", minWidth: 0 }} onClick={onGoHome}>
           <img
             src="/logo-64.png"
             alt={siteConfig.name}
             style={{
-              width: "36px",
-              height: "36px",
-              borderRadius: "10px",
+              width: "32px",
+              height: "32px",
+              borderRadius: "8px",
               objectFit: "cover",
               border: "1px solid var(--border-subtle)",
+              flexShrink: 0,
             }}
           />
-          <div>
-            <h2 style={{ fontSize: "1.25rem", lineHeight: 1 }}>
-              {siteConfig.name} <span style={{ fontSize: "0.75rem", color: "var(--accent-primary)", fontWeight: 600 }}>MVP</span>
+          <div className="min-w-0">
+            <h2 className="truncate" style={{ fontSize: "1.1rem", lineHeight: 1.1 }}>
+              {siteConfig.name} <span style={{ fontSize: "0.65rem", color: "var(--accent-primary)", fontWeight: 700, verticalAlign: "middle" }}>MVP</span>
             </h2>
-            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>{siteConfig.tagline}</p>
+            <p className="hide-mobile truncate" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{siteConfig.tagline}</p>
           </div>
         </div>
 
-        {/* Active Session Status Badge */}
+        {/* Active Session Name Badge */}
         {currentSessionName && (
-          <div className="flex items-center gap-2 desktop-only" style={{ backgroundColor: "var(--bg-input)", padding: "0.35rem 0.85rem", borderRadius: "9999px", border: "1px solid var(--border-subtle)" }}>
-            <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>{currentSessionName}</span>
-            <span className="badge badge-emerald flex items-center gap-1" style={{ fontSize: "0.7rem" }}>
-              <ShieldCheck size={12} /> {autoSaveStatus}
+          <div className="flex items-center gap-1 min-w-0" style={{ backgroundColor: "var(--bg-input)", padding: "0.25rem 0.6rem", borderRadius: "9999px", border: "1px solid var(--border-subtle)", maxWidth: "160px" }}>
+            <span className="truncate" style={{ fontSize: "0.75rem", fontWeight: 600 }}>{currentSessionName}</span>
+            <span className="badge badge-emerald hide-mobile" style={{ fontSize: "0.65rem", padding: "0.15rem 0.4rem" }}>
+              <ShieldCheck size={10} /> {autoSaveStatus}
             </span>
           </div>
         )}
 
-        {/* Right Navigation Actions */}
-        <div className="flex items-center gap-2">
-          <button className="btn btn-outline btn-sm" onClick={onOpenHelp}>
-            <HelpCircle size={16} color="var(--accent-primary)" /> <span className="desktop-only">Help & Guide</span>
+        {/* Header Right Action Icons */}
+        <div className="flex items-center gap-1.5" style={{ flexShrink: 0 }}>
+          <button className="btn btn-outline btn-sm btn-icon" onClick={onOpenHelp} title="Help & Guide">
+            <HelpCircle size={18} color="var(--accent-primary)" />
           </button>
-          <button className="btn btn-secondary btn-sm" onClick={onGoHome}>
-            <Layout size={16} /> <span className="desktop-only">My Sessions</span>
+          <button className="btn btn-secondary btn-sm btn-icon" onClick={onGoHome} title="My Sessions">
+            <Layout size={18} />
           </button>
         </div>
       </div>

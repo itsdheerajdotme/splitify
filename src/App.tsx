@@ -14,8 +14,7 @@ import { ExportSettings } from "./components/ExportSettings";
 import { DeleteShieldModal } from "./components/DeleteShieldModal";
 import { HelpPage } from "./components/HelpPage";
 import { MobileBottomNav } from "./components/MobileBottomNav";
-
-import { Plus, ListFilter, Scale, Settings, LayoutDashboard, HelpCircle } from "lucide-react";
+import { NavTabs } from "./components/NavTabs";
 
 type TabType = "overview" | "transactions" | "add-expense" | "balances" | "settings" | "help";
 
@@ -265,48 +264,17 @@ export function App() {
           />
         ) : (
           <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
-            {/* Session Desktop Tabs Navigation */}
-            <div className="tabs desktop-only">
-              <button
-                className={`tab-btn ${currentTab === "overview" ? "active" : ""}`}
-                onClick={() => setActiveTab("overview")}
-              >
-                <LayoutDashboard size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Overview
-              </button>
-              <button
-                className={`tab-btn ${currentTab === "transactions" ? "active" : ""}`}
-                onClick={() => setActiveTab("transactions")}
-              >
-                <ListFilter size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Transactions ({activeSession.expenses.length})
-              </button>
-              <button
-                className={`tab-btn ${currentTab === "add-expense" ? "active" : ""}`}
-                onClick={() => {
+            {/* NavTabs with Left / Right Scroll Controls */}
+            <NavTabs
+              activeTab={currentTab}
+              onTabChange={(tab) => {
+                if (tab === "add-expense") {
                   setEditingExpense(null);
-                  setActiveTab("add-expense");
-                }}
-              >
-                <Plus size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Add Expense
-              </button>
-              <button
-                className={`tab-btn ${currentTab === "balances" ? "active" : ""}`}
-                onClick={() => setActiveTab("balances")}
-              >
-                <Scale size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Balances & Settlement
-              </button>
-              <button
-                className={`tab-btn ${currentTab === "settings" ? "active" : ""}`}
-                onClick={() => setActiveTab("settings")}
-              >
-                <Settings size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Export & Settings
-              </button>
-              <button
-                className={`tab-btn ${(activeTab as string) === "help" ? "active" : ""}`}
-                onClick={() => setActiveTab("help")}
-              >
-                <HelpCircle size={16} style={{ display: "inline", verticalAlign: "middle", marginRight: "6px" }} /> Help & Guide
-              </button>
-            </div>
+                }
+                setActiveTab(tab);
+              }}
+              expenseCount={activeSession.expenses.length}
+            />
 
             {/* Active Tab Views */}
             {currentTab === "overview" && (

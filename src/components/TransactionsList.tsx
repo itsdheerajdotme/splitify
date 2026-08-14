@@ -3,7 +3,7 @@ import { Expense, Participant } from "../domain/types";
 import { CATEGORIES } from "../services/category-suggester";
 import { formatCurrency } from "../services/export-import";
 import { calculateSplitAllocations } from "../domain/split-engine";
-import { Search, Edit2, Trash2, Calendar, Tag, FileText } from "lucide-react";
+import { Search, Edit2, Trash2, Calendar, User } from "lucide-react";
 
 interface TransactionsListProps {
   expenses: Expense[];
@@ -36,26 +36,31 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({
   });
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       {/* Search & Filter Bar */}
-      <div className="flex gap-3 items-center justify-between" style={{ marginBottom: "1.25rem", flexWrap: "wrap" }}>
-        <div className="flex items-center gap-2 flex-1" style={{ minWidth: "240px" }}>
+      <div className="flex gap-2 items-center justify-between" style={{ flexWrap: "wrap", marginBottom: "0.5rem" }}>
+        <div className="flex items-center gap-2 flex-1" style={{ minWidth: "160px" }}>
           <div className="form-group" style={{ margin: 0, width: "100%", position: "relative" }}>
             <input
               type="text"
               className="form-input"
-              placeholder="Search expenses by name, tags, notes..."
+              placeholder="Search expenses..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ paddingLeft: "2.25rem" }}
+              style={{ paddingLeft: "2.1rem", fontSize: "0.85rem" }}
             />
-            <Search size={16} color="var(--text-muted)" style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)" }} />
+            <Search size={15} color="var(--text-muted)" style={{ position: "absolute", left: "0.65rem", top: "50%", transform: "translateY(-50%)" }} />
           </div>
         </div>
 
-        <div style={{ minWidth: "180px" }}>
-          <select className="form-select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-            <option value="all">All Categories ({expenses.length})</option>
+        <div style={{ minWidth: "130px" }}>
+          <select
+            className="form-select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            style={{ fontSize: "0.85rem" }}
+          >
+            <option value="all">All ({expenses.length})</option>
             {CATEGORIES.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.icon} {c.name}
@@ -65,10 +70,10 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({
         </div>
       </div>
 
-      {/* Expenses Cards List */}
+      {/* Expenses List Cards with Margins */}
       {filteredExpenses.length === 0 ? (
-        <div className="card text-center" style={{ padding: "3rem 1.5rem" }}>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem" }}>No expenses recorded yet.</p>
+        <div className="card text-center" style={{ padding: "2.5rem 1rem" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>No expenses recorded yet.</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -79,89 +84,103 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({
             const allocations = calculateSplitAllocations(expense.amountMinor, expense.split);
 
             return (
-              <div key={expense.id} className="card">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
+              <div
+                key={expense.id}
+                className="card"
+                style={{
+                  padding: "0.95rem 1rem",
+                  margin: "0.25rem 0",
+                  boxShadow: "var(--shadow-sm)",
+                }}
+              >
+                {/* Top Row: Category Icon (with spacing) + Title + Amount */}
+                <div className="flex items-start justify-between min-w-0" style={{ gap: "0.75rem" }}>
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    {/* Icon Container with Spacing */}
                     <div
                       style={{
-                        width: "44px",
-                        height: "44px",
+                        width: "42px",
+                        height: "42px",
                         borderRadius: "var(--radius-md)",
                         backgroundColor: "var(--bg-input)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        fontSize: "1.5rem",
+                        fontSize: "1.35rem",
                         border: "1px solid var(--border-subtle)",
+                        flexShrink: 0,
+                        marginRight: "0.25rem",
                       }}
                     >
                       {icon}
                     </div>
 
-                    <div>
-                      <h4 style={{ fontSize: "1.1rem", marginBottom: "0.15rem" }}>{expense.description}</h4>
-                      <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }} className="flex items-center gap-2">
-                        <span>Paid by <strong style={{ color: "var(--text-main)" }}>{payerName}</strong></span>
-                        <span>•</span>
+                    <div className="min-w-0 flex-1">
+                      {/* Title with bottom margin */}
+                      <h4 className="truncate" style={{ fontSize: "1rem", lineHeight: 1.25, marginBottom: "0.35rem" }}>
+                        {expense.description}
+                      </h4>
+
+                      {/* Sub-row: Payer, Date, Split Method with proper spacing */}
+                      <div className="flex items-center gap-3 flex-wrap" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                        <span className="flex items-center gap-1.5 font-semibold" style={{ color: "var(--text-main)" }}>
+                          <User size={13} color="var(--accent-primary)" /> {payerName}
+                        </span>
+
+                        <span style={{ opacity: 0.4 }}>•</span>
+
                         <span className="flex items-center gap-1">
                           <Calendar size={13} /> {expense.date || expense.createdAt.split("T")[0]}
                         </span>
-                        <span>•</span>
-                        <span className="badge badge-subtle" style={{ textTransform: "capitalize" }}>
-                          Split: {expense.split.method}
+
+                        <span style={{ opacity: 0.4 }}>•</span>
+
+                        <span className="badge badge-subtle" style={{ fontSize: "0.7rem", padding: "0.15rem 0.45rem", textTransform: "capitalize" }}>
+                          {expense.split.method}
                         </span>
-                      </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="text-right flex flex-col items-end">
-                    <span className="mono" style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--accent-primary)" }}>
+                  {/* Amount + Action Buttons */}
+                  <div className="flex flex-col items-end" style={{ flexShrink: 0, gap: "0.35rem" }}>
+                    <span className="mono" style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--accent-primary)" }}>
                       {formatCurrency(expense.amountMinor, expense.currency)}
                     </span>
 
-                    <div className="flex gap-1" style={{ marginTop: "0.35rem" }}>
-                      <button className="btn btn-outline btn-sm" onClick={() => onEditExpense(expense)} style={{ padding: "0.25rem 0.5rem" }}>
-                        <Edit2 size={14} />
+                    <div className="flex gap-1.5">
+                      <button
+                        className="btn btn-outline btn-sm btn-icon"
+                        onClick={() => onEditExpense(expense)}
+                        style={{ width: "30px", height: "30px", minHeight: "30px", minWidth: "30px", padding: 0 }}
+                        title="Edit Expense"
+                      >
+                        <Edit2 size={13} />
                       </button>
-                      <button className="btn btn-outline btn-sm" onClick={() => onDeleteExpense(expense.id)} style={{ padding: "0.25rem 0.5rem", color: "var(--color-danger)" }}>
-                        <Trash2 size={14} />
+                      <button
+                        className="btn btn-outline btn-sm btn-icon"
+                        onClick={() => onDeleteExpense(expense.id)}
+                        style={{ width: "30px", height: "30px", minHeight: "30px", minWidth: "30px", padding: 0, color: "var(--color-danger)" }}
+                        title="Delete Expense"
+                      >
+                        <Trash2 size={13} />
                       </button>
                     </div>
                   </div>
                 </div>
 
-                {/* Individual Split Breakdown */}
-                <div style={{ marginTop: "0.85rem", paddingTop: "0.75rem", borderTop: "1px dashed var(--border-subtle)" }}>
-                  <div className="flex items-center justify-between" style={{ flexWrap: "wrap", gap: "0.5rem" }}>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 600 }}>SPLIT BREAKDOWN:</span>
-                      {allocations.map((a) => {
-                        const pName = participantMap.get(a.participantId) || a.participantId;
-                        return (
-                          <span key={a.participantId} className="badge badge-subtle mono" style={{ fontSize: "0.75rem" }}>
-                            {pName}: {formatCurrency(a.amountMinor, expense.currency)}
-                          </span>
-                        );
-                      })}
-                    </div>
-
-                    {expense.tags.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Tag size={12} color="var(--text-muted)" />
-                        {expense.tags.map((t, idx) => (
-                          <span key={idx} style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-                            #{t}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                {/* Bottom Row: Split Breakdown Pills with Spacing */}
+                <div style={{ marginTop: "0.75rem", paddingTop: "0.6rem", borderTop: "1px dashed var(--border-subtle)" }}>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {allocations.map((a) => {
+                      const pName = participantMap.get(a.participantId) || a.participantId;
+                      return (
+                        <span key={a.participantId} className="badge badge-subtle mono" style={{ fontSize: "0.73rem", padding: "0.2rem 0.5rem" }}>
+                          {pName}: {formatCurrency(a.amountMinor, expense.currency)}
+                        </span>
+                      );
+                    })}
                   </div>
-
-                  {expense.notes && (
-                    <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "0.5rem" }} className="flex items-center gap-1">
-                      <FileText size={12} /> {expense.notes}
-                    </p>
-                  )}
                 </div>
               </div>
             );

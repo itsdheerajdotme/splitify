@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Session } from "../domain/types";
 import { formatCurrency, importSessionFromJson } from "../services/export-import";
-import { Plus, Upload, Calendar, Users, DollarSign, ArrowRight, Trash2, Search, Zap } from "lucide-react";
+import { Plus, Upload, Calendar, Users, FileText, ChevronRight, Trash2, Search } from "lucide-react";
 
 interface SessionListProps {
   sessions: Session[];
@@ -43,13 +43,13 @@ export const SessionList: React.FC<SessionListProps> = ({
   };
 
   return (
-    <div className="container" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
-      {/* Welcome Banner */}
-      <div className="card flex items-center justify-between" style={{ backgroundColor: "var(--bg-input)", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
+    <div className="container" style={{ paddingTop: "1rem", paddingBottom: "3rem" }}>
+      {/* Compact Header Bar */}
+      <div className="card flex items-center justify-between" style={{ backgroundColor: "var(--bg-input)", marginBottom: "1rem", padding: "0.85rem 1rem", flexWrap: "wrap", gap: "0.75rem" }}>
         <div>
-          <h2 style={{ fontSize: "1.75rem", marginBottom: "0.25rem" }}>My Expense Sessions</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
-            Track shared expenses for trips, dinners, and events. Stored 100% locally in your browser.
+          <h2 style={{ fontSize: "1.25rem", lineHeight: 1.1 }}>My Expense Sessions</h2>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", marginTop: "0.15rem" }}>
+            Track shared expenses locally in your browser.
           </p>
         </div>
 
@@ -61,40 +61,39 @@ export const SessionList: React.FC<SessionListProps> = ({
             onChange={handleFileUpload}
             style={{ display: "none" }}
           />
-          <button className="btn btn-outline" onClick={() => fileInputRef.current?.click()}>
-            <Upload size={16} /> Import JSON Backup
+          <button className="btn btn-outline btn-sm" onClick={() => fileInputRef.current?.click()} title="Import JSON">
+            <Upload size={14} /> <span className="hide-mobile">Import JSON</span>
           </button>
-          <button className="btn btn-primary" onClick={onOpenCreateModal}>
-            <Plus size={18} /> New Session / Trip
+          <button className="btn btn-primary btn-sm" onClick={onOpenCreateModal}>
+            <Plus size={16} /> New Session
           </button>
         </div>
       </div>
 
       {/* Filter / Search Bar */}
       {sessions.length > 0 && (
-        <div style={{ marginBottom: "1.25rem", position: "relative", maxWidth: "400px" }}>
+        <div style={{ marginBottom: "1rem", position: "relative", maxWidth: "360px" }}>
           <input
             type="text"
             className="form-input"
             placeholder="Search saved sessions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: "2.25rem" }}
+            style={{ paddingLeft: "2.1rem", fontSize: "0.85rem", minHeight: "38px" }}
           />
-          <Search size={16} color="var(--text-muted)" style={{ position: "absolute", left: "0.75rem", top: "50%", transform: "translateY(-50%)" }} />
+          <Search size={15} color="var(--text-muted)" style={{ position: "absolute", left: "0.65rem", top: "50%", transform: "translateY(-50%)" }} />
         </div>
       )}
 
       {/* Sessions Grid */}
       {filteredSessions.length === 0 ? (
-        <div className="card text-center" style={{ padding: "4rem 2rem" }}>
-          <Zap size={48} color="var(--accent-primary)" style={{ margin: "0 auto 1rem" }} />
-          <h3 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>No Saved Sessions Found</h3>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", maxWidth: "420px", margin: "0 auto 1.5rem" }}>
-            Start your first expense session or import an existing JSON backup file.
+        <div className="card text-center" style={{ padding: "3rem 1rem" }}>
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.35rem" }}>No Saved Sessions Found</h3>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "360px", margin: "0 auto 1.25rem" }}>
+            Start your first trip or import a JSON backup file.
           </p>
-          <button className="btn btn-primary btn-lg" onClick={onOpenCreateModal}>
-            <Plus size={18} /> Create Your First Session
+          <button className="btn btn-primary" onClick={onOpenCreateModal}>
+            <Plus size={16} /> Create Your First Session
           </button>
         </div>
       ) : (
@@ -104,7 +103,6 @@ export const SessionList: React.FC<SessionListProps> = ({
             const lastUpdated = new Date(session.updatedAt).toLocaleDateString("en-IN", {
               month: "short",
               day: "numeric",
-              year: "numeric",
             });
 
             return (
@@ -112,49 +110,49 @@ export const SessionList: React.FC<SessionListProps> = ({
                 key={session.id}
                 className="card card-interactive flex flex-col justify-between"
                 onClick={() => onSelectSession(session)}
+                style={{ padding: "0.85rem 1rem" }}
               >
                 <div>
-                  <div className="flex items-start justify-between" style={{ marginBottom: "0.75rem" }}>
-                    <h3 style={{ fontSize: "1.25rem" }}>{session.name}</h3>
-                    <button
-                      className="btn btn-outline btn-sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteSessionPrompt(session);
-                      }}
-                      style={{ padding: "0.25rem 0.5rem", color: "var(--color-danger)" }}
-                      title="Delete Session"
-                    >
-                      <Trash2 size={14} />
-                    </button>
+                  <div className="flex items-center justify-between" style={{ marginBottom: "0.5rem", gap: "0.5rem" }}>
+                    <h3 className="truncate" style={{ fontSize: "1.1rem" }}>{session.name}</h3>
+                    
+                    <div className="flex items-center gap-1" style={{ flexShrink: 0 }}>
+                      <button
+                        className="btn btn-outline btn-sm btn-icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteSessionPrompt(session);
+                        }}
+                        style={{ width: "28px", height: "28px", minHeight: "28px", minWidth: "28px", padding: 0, color: "var(--color-danger)" }}
+                        title="Delete Session"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                      <ChevronRight size={18} color="var(--text-muted)" />
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: "1rem" }}>
-                    <span className="badge badge-subtle flex items-center gap-1">
-                      <Users size={12} /> {session.participants.length} Participants
+                  {/* Clean Icon Badges replacing long text */}
+                  <div className="flex items-center gap-1.5 flex-wrap" style={{ marginBottom: "0.75rem" }}>
+                    <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem" }}>
+                      <Users size={11} /> {session.participants.length}
                     </span>
-                    <span className="badge badge-subtle flex items-center gap-1">
-                      <DollarSign size={12} /> {session.expenses.length} Expenses
+                    <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem" }}>
+                      <FileText size={11} /> {session.expenses.length}
                     </span>
-                    <span className="badge badge-subtle flex items-center gap-1">
-                      <Calendar size={12} /> {lastUpdated}
+                    <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem" }}>
+                      <Calendar size={11} /> {lastUpdated}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between" style={{ paddingTop: "0.75rem", borderTop: "1px solid var(--border-subtle)" }}>
-                  <div>
-                    <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 600 }}>
-                      Total Spent
-                    </span>
-                    <h4 className="mono" style={{ fontSize: "1.25rem", color: "var(--accent-primary)" }}>
-                      {formatCurrency(totalSpending)}
-                    </h4>
-                  </div>
-
-                  <span className="btn btn-secondary btn-sm flex items-center gap-1">
-                    Open Trip <ArrowRight size={14} />
+                <div className="flex items-center justify-between" style={{ paddingTop: "0.5rem", borderTop: "1px solid var(--border-subtle)" }}>
+                  <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 700 }}>
+                    TOTAL SPENT
                   </span>
+                  <h4 className="mono" style={{ fontSize: "1.15rem", color: "var(--accent-primary)", fontWeight: 700 }}>
+                    {formatCurrency(totalSpending)}
+                  </h4>
                 </div>
               </div>
             );
