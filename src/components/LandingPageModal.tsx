@@ -18,7 +18,7 @@ export const LandingPageModal: React.FC<LandingPageModalProps> = ({
 
   if (!isOpen) return null;
 
-  const perPerson = (demoAmount / Math.max(1, demoPeople)).toFixed(2);
+  const perPerson = Math.round(demoAmount / Math.max(1, demoPeople));
 
   return (
     <div className="modal-overlay" onClick={onClose}>

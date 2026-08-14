@@ -10,10 +10,12 @@ function escapeCsvField(field: string): string {
 }
 
 export function formatCurrency(amountMinor: number, currency: string = "INR"): string {
-  return (amountMinor / 100).toLocaleString("en-IN", {
+  const amountRupees = Math.round(amountMinor / 100);
+  return amountRupees.toLocaleString("en-IN", {
     style: "currency",
     currency: currency || "INR",
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 }
 
@@ -44,7 +46,7 @@ export function exportSessionToCsv(session: Session): string {
     const categoryDef = CATEGORIES.find((c) => c.id === expense.categoryId);
     const categoryLabel = categoryDef ? `${categoryDef.icon} ${categoryDef.name}` : expense.categoryId;
     const payerName = participantMap.get(expense.paidBy) || expense.paidBy;
-    const totalFormatted = (expense.amountMinor / 100).toFixed(2);
+    const totalFormatted = Math.round(expense.amountMinor / 100).toFixed(0);
     const dateStr = expense.date || expense.createdAt.split("T")[0];
     const tagsStr = expense.tags.join("; ");
 
@@ -52,7 +54,7 @@ export function exportSessionToCsv(session: Session): string {
 
     for (const alloc of allocations) {
       const participantName = participantMap.get(alloc.participantId) || alloc.participantId;
-      const shareFormatted = (alloc.amountMinor / 100).toFixed(2);
+      const shareFormatted = Math.round(alloc.amountMinor / 100).toFixed(0);
 
       const row = [
         expense.id,

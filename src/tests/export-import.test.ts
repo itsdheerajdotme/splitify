@@ -63,7 +63,7 @@ describe("Export & Import Service", () => {
     expect(csv).toContain("Expense ID,Date,Description");
     expect(csv).toContain('"Dinner, Cafe"'); // escaped due to comma
     expect(csv).toContain("Dheeraj");
-    expect(csv).toContain("12.00"); // 2400 minor = 24.00 total, 12.00 per share
+    expect(csv).toContain("12"); // 2400 minor = 24 total, 12 per share
   });
 
   it("should export and re-import JSON correctly without loss of data", () => {

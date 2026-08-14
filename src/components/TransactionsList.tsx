@@ -4,6 +4,7 @@ import { CATEGORIES } from "../services/category-suggester";
 import { formatCurrency } from "../services/export-import";
 import { calculateSplitAllocations } from "../domain/split-engine";
 import { Search, Edit2, Trash2, Calendar, User } from "lucide-react";
+import { DeleteExpenseModal } from "./DeleteExpenseModal";
 
 interface TransactionsListProps {
   expenses: Expense[];
@@ -20,6 +21,7 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [expenseToDelete, setExpenseToDelete] = useState<Expense | null>(null);
 
   const participantMap = new Map<string, string>();
   participants.forEach((p) => participantMap.set(p.id, p.name));
@@ -159,7 +161,7 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({
                       </button>
                       <button
                         className="btn btn-outline btn-sm btn-icon"
-                        onClick={() => onDeleteExpense(expense.id)}
+                        onClick={() => setExpenseToDelete(expense)}
                         style={{ width: "30px", height: "30px", minHeight: "30px", minWidth: "30px", padding: 0, color: "var(--color-danger)" }}
                         title="Delete Expense"
                       >
@@ -187,6 +189,15 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({
           })}
         </div>
       )}
+
+      {/* Expense Deletion Confirmation Modal */}
+      <DeleteExpenseModal
+        expense={expenseToDelete}
+        participants={participants}
+        isOpen={!!expenseToDelete}
+        onClose={() => setExpenseToDelete(null)}
+        onConfirmDelete={onDeleteExpense}
+      />
     </div>
   );
 };

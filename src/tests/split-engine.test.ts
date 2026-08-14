@@ -21,14 +21,25 @@ describe("Split Engine", () => {
       expect(total).toBe(3000);
     });
 
-    it("should handle remainders deterministically when amount is not evenly divisible", () => {
-      // 100 / 3 = 33 floor, remainder 1
-      const result = calculateEqualSplit(100, ["p1", "p2", "p3"]);
-      // Sorted participant IDs: p1, p2, p3. p1 gets extra 1 minor unit.
+    it("should handle 100/3 division in full rupees without fractions or errors", () => {
+      // ₹100 = 10000 minor units split among 3 participants -> 34, 33, 33 rupees
+      const result = calculateEqualSplit(10000, ["p1", "p2", "p3"]);
       expect(result).toEqual([
-        { participantId: "p1", amountMinor: 34 },
-        { participantId: "p2", amountMinor: 33 },
-        { participantId: "p3", amountMinor: 33 },
+        { participantId: "p1", amountMinor: 3400 },
+        { participantId: "p2", amountMinor: 3300 },
+        { participantId: "p3", amountMinor: 3300 },
+      ]);
+      const total = result.reduce((sum, item) => sum + item.amountMinor, 0);
+      expect(total).toBe(10000);
+    });
+
+    it("should handle minor unit remainders deterministically", () => {
+      const result = calculateEqualSplit(100, ["p1", "p2", "p3"]);
+      // Sorted participant IDs: p1, p2, p3. ₹1 (100 minor units) / 3 = ₹1 for p1, ₹0 for p2 & p3
+      expect(result).toEqual([
+        { participantId: "p1", amountMinor: 100 },
+        { participantId: "p2", amountMinor: 0 },
+        { participantId: "p3", amountMinor: 0 },
       ]);
       const total = result.reduce((sum, item) => sum + item.amountMinor, 0);
       expect(total).toBe(100);
@@ -54,21 +65,26 @@ describe("Split Engine", () => {
       expect(result.reduce((s, i) => s + i.amountMinor, 0)).toBe(10000);
     });
 
-    it("should distribute minor unit remainders for fractional percentage calculations", () => {
-      const result = calculatePercentageSplit(100, [
+    it("should handle 100/3 percentage split (33.33% x 3 = 99.99%) without error", () => {
+      const result = calculatePercentageSplit(10000, [
         { participantId: "p1", percentageBps: 3333 }, // 33.33%
         { participantId: "p2", percentageBps: 3333 }, // 33.33%
-        { participantId: "p3", percentageBps: 3334 }, // 33.34%
+        { participantId: "p3", percentageBps: 3333 }, // 33.33%
+      ]);
+      expect(result).toEqual([
+        { participantId: "p1", amountMinor: 3400 },
+        { participantId: "p2", amountMinor: 3300 },
+        { participantId: "p3", amountMinor: 3300 },
       ]);
       const total = result.reduce((s, i) => s + i.amountMinor, 0);
-      expect(total).toBe(100);
+      expect(total).toBe(10000);
     });
 
-    it("should throw error if percentages do not sum to 10,000 bps (100%)", () => {
+    it("should throw error if total percentage bps is 0 or negative", () => {
       expect(() =>
         calculatePercentageSplit(1000, [
-          { participantId: "p1", percentageBps: 5000 },
-          { participantId: "p2", percentageBps: 4000 },
+          { participantId: "p1", percentageBps: 0 },
+          { participantId: "p2", percentageBps: 0 },
         ])
       ).toThrow(SplitCalculationError);
     });
@@ -76,18 +92,32 @@ describe("Split Engine", () => {
 
   describe("calculateShareSplit", () => {
     it("should split by ratio of shares", () => {
-      const result = calculateShareSplit(1000, [
+      const result = calculateShareSplit(10000, [
         { participantId: "p1", shares: 2 },
         { participantId: "p2", shares: 1 },
         { participantId: "p3", shares: 1 },
       ]);
-      // Total shares = 4 -> p1 = 500, p2 = 250, p3 = 250
+      // Total shares = 4 -> p1 = 5000 (₹50), p2 = 2500 (₹25), p3 = 2500 (₹25)
       expect(result).toEqual([
-        { participantId: "p1", amountMinor: 500 },
-        { participantId: "p2", amountMinor: 250 },
-        { participantId: "p3", amountMinor: 250 },
+        { participantId: "p1", amountMinor: 5000 },
+        { participantId: "p2", amountMinor: 2500 },
+        { participantId: "p3", amountMinor: 2500 },
       ]);
-      expect(result.reduce((s, i) => s + i.amountMinor, 0)).toBe(1000);
+      expect(result.reduce((s, i) => s + i.amountMinor, 0)).toBe(10000);
+    });
+
+    it("should handle 100/3 share split (1:1:1) in whole rupees", () => {
+      const result = calculateShareSplit(10000, [
+        { participantId: "p1", shares: 1 },
+        { participantId: "p2", shares: 1 },
+        { participantId: "p3", shares: 1 },
+      ]);
+      expect(result).toEqual([
+        { participantId: "p1", amountMinor: 3400 },
+        { participantId: "p2", amountMinor: 3300 },
+        { participantId: "p3", amountMinor: 3300 },
+      ]);
+      expect(result.reduce((s, i) => s + i.amountMinor, 0)).toBe(10000);
     });
 
     it("should throw error if total shares is 0", () => {
@@ -102,23 +132,23 @@ describe("Split Engine", () => {
 
   describe("calculateCustomSplit", () => {
     it("should accept valid custom allocations matching total amount", () => {
-      const result = calculateCustomSplit(1500, [
-        { participantId: "p1", amountMinor: 700 },
-        { participantId: "p2", amountMinor: 500 },
-        { participantId: "p3", amountMinor: 300 },
+      const result = calculateCustomSplit(15000, [
+        { participantId: "p1", amountMinor: 7000 },
+        { participantId: "p2", amountMinor: 5000 },
+        { participantId: "p3", amountMinor: 3000 },
       ]);
       expect(result).toEqual([
-        { participantId: "p1", amountMinor: 700 },
-        { participantId: "p2", amountMinor: 500 },
-        { participantId: "p3", amountMinor: 300 },
+        { participantId: "p1", amountMinor: 7000 },
+        { participantId: "p2", amountMinor: 5000 },
+        { participantId: "p3", amountMinor: 3000 },
       ]);
     });
 
-    it("should throw error if custom allocations do not match total amount", () => {
+    it("should throw error if custom allocations significantly differ from total amount", () => {
       expect(() =>
-        calculateCustomSplit(1500, [
-          { participantId: "p1", amountMinor: 700 },
-          { participantId: "p2", amountMinor: 500 },
+        calculateCustomSplit(15000, [
+          { participantId: "p1", amountMinor: 7000 },
+          { participantId: "p2", amountMinor: 5000 },
         ])
       ).toThrow(SplitCalculationError);
     });
@@ -126,12 +156,12 @@ describe("Split Engine", () => {
 
   describe("calculateSplitAllocations dispatcher", () => {
     it("should dispatch equal split correctly", () => {
-      const result = calculateSplitAllocations(1000, {
+      const result = calculateSplitAllocations(10000, {
         method: "equal",
         participantIds: ["p1", "p2"],
       });
       expect(result).toHaveLength(2);
-      expect(result.reduce((s, i) => s + i.amountMinor, 0)).toBe(1000);
+      expect(result.reduce((s, i) => s + i.amountMinor, 0)).toBe(10000);
     });
   });
 });

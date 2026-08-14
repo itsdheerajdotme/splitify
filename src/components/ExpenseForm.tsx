@@ -52,8 +52,16 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
         init[a.participantId] = (a.percentageBps / 100).toString();
       });
     } else {
-      const defaultPerc = (100 / participants.length).toFixed(2);
-      participants.forEach((p) => (init[p.id] = defaultPerc));
+      const count = participants.length;
+      if (count > 0) {
+        const basePerc = Math.floor(100 / count);
+        let remPerc = 100 % count;
+        participants.forEach((p) => {
+          const extra = remPerc > 0 ? 1 : 0;
+          if (remPerc > 0) remPerc--;
+          init[p.id] = (basePerc + extra).toString();
+        });
+      }
     }
     return init;
   });
@@ -76,7 +84,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     const init: { [id: string]: string } = {};
     if (initialExpense?.split.method === "custom") {
       initialExpense.split.allocations.forEach((a) => {
-        init[a.participantId] = (a.amountMinor / 100).toString();
+        init[a.participantId] = Math.round(a.amountMinor / 100).toString();
       });
     } else {
       participants.forEach((p) => (init[p.id] = "0"));
@@ -93,7 +101,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     }
   }, [description]);
 
-  const amountMinor = Math.round(parseFloat(amountStr || "0") * 100);
+  const amountMinor = Math.round(parseFloat(amountStr || "0")) * 100;
 
   // Calculations for validations
   const percSum = Object.values(percAllocations).reduce(
@@ -101,8 +109,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
     0
   );
   const customSumMinor = Math.round(
-    Object.values(customAllocations).reduce((sum, val) => sum + (parseFloat(val) || 0), 0) * 100
-  );
+    Object.values(customAllocations).reduce((sum, val) => sum + (parseFloat(val) || 0), 0)
+  ) * 100;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,7 +125,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       if (equalSelectedIds.length === 0) return;
       splitPayload = { method: "equal", participantIds: equalSelectedIds };
     } else if (splitMethod === "percentage") {
-      if (Math.abs(percSum - 100) > 0.05) return;
+      if (Math.abs(percSum - 100) > 1.0) return;
       const allocations = participants.map((p) => ({
         participantId: p.id,
         percentageBps: Math.round((parseFloat(percAllocations[p.id] || "0") * 100)),
@@ -131,10 +139,10 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
       splitPayload = { method: "share", allocations };
     } else {
       // Custom
-      if (customSumMinor !== amountMinor) return;
+      if (Math.abs(customSumMinor - amountMinor) > 500) return;
       const allocations = participants.map((p) => ({
         participantId: p.id,
-        amountMinor: Math.round(parseFloat(customAllocations[p.id] || "0") * 100),
+        amountMinor: Math.round(parseFloat(customAllocations[p.id] || "0")) * 100,
       }));
       splitPayload = { method: "custom", allocations };
     }
@@ -182,9 +190,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             <label className="form-label">Total Amount (₹) *</label>
             <input
               type="number"
-              step="0.01"
+              step="1"
               className="form-input mono"
-              placeholder="0.00"
+              placeholder="0"
               value={amountStr}
               onChange={(e) => setAmountStr(e.target.value)}
               required
@@ -291,8 +299,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             <div>
               <div className="flex justify-between items-center" style={{ marginBottom: "0.5rem" }}>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Assign percentages (Total must equal 100%):</p>
-                <span className={`badge ${Math.abs(percSum - 100) < 0.05 ? "badge-emerald" : "badge-warning"}`}>
-                  Total: {percSum.toFixed(2)}%
+                <span className={`badge ${Math.abs(percSum - 100) < 1.0 ? "badge-emerald" : "badge-warning"}`}>
+                  Total: {Math.round(percSum)}%
                 </span>
               </div>
               <div className="grid-2">
@@ -301,7 +309,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                     <span style={{ fontSize: "0.85rem", width: "80px" }}>{p.name}</span>
                     <input
                       type="number"
-                      step="0.01"
+                      step="1"
                       className="form-input mono"
                       placeholder="0"
                       value={percAllocations[p.id] || ""}
@@ -343,8 +351,8 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
             <div>
               <div className="flex justify-between items-center" style={{ marginBottom: "0.5rem" }}>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Enter exact rupee amounts per person:</p>
-                <span className={`badge ${customSumMinor === amountMinor ? "badge-emerald" : "badge-warning"}`}>
-                  Allocated: ₹{(customSumMinor / 100).toFixed(2)} / ₹{(amountMinor / 100).toFixed(2)}
+                <span className={`badge ${Math.abs(customSumMinor - amountMinor) <= 500 ? "badge-emerald" : "badge-warning"}`}>
+                  Allocated: ₹{Math.round(customSumMinor / 100)} / ₹{Math.round(amountMinor / 100)}
                 </span>
               </div>
               <div className="grid-2">
@@ -353,9 +361,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({
                     <span style={{ fontSize: "0.85rem", width: "80px" }}>{p.name}</span>
                     <input
                       type="number"
-                      step="0.01"
+                      step="1"
                       className="form-input mono"
-                      placeholder="0.00"
+                      placeholder="0"
                       value={customAllocations[p.id] || ""}
                       onChange={(e) => setCustomAllocations({ ...customAllocations, [p.id]: e.target.value })}
                     />
