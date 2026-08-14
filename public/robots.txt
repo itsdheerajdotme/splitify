@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /help
+Allow: /terms
+Allow: /privacy
+
+# Host & Sitemap
+Host: https://splitify.arthdristi.com
+Sitemap: https://splitify.arthdristi.com/sitemap.xml

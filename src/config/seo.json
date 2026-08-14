@@ -1,0 +1,164 @@
+{
+  "site": {
+    "name": "Splitify",
+    "domainUrl": "https://splitify.arthdristi.com",
+    "tagline": "Forever free, forever private, forever yours.",
+    "defaultTitle": "Splitify — Free, Private & Offline Group Expense Splitter",
+    "defaultDescription": "Fast, private, browser-first shared expense calculator for trips, dinners, outings, and roommate expenses. Equal, percentage, or custom splits with zero backend storage.",
+    "defaultKeywords": "expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, Splitwise alternative private, group expense tracker",
+    "author": "@itsdheeraj.me",
+    "themeColor": "#0f172a",
+    "ogImage": "/logo-512.png",
+    "twitterHandle": "@itsdheerajdotme",
+    "language": "en",
+    "locale": "en_US"
+  },
+  "pages": {
+    "home": {
+      "path": "/",
+      "title": "Splitify — Free, Private & Offline Group Expense Splitter",
+      "description": "Splitify is a fast, 100% private, browser-first expense splitter for trips, dinners, and roommates. Calculate equal, percentage, or custom bill splits without logins or backend tracking.",
+      "keywords": "expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, Splitwise alternative private, group expense tracker",
+      "canonical": "https://splitify.arthdristi.com/",
+      "og": {
+        "title": "Splitify — Zero-Backend Shared Expense Calculator",
+        "description": "Fast, private, browser-first expense calculator for trips, dinners, and group outings.",
+        "type": "website",
+        "url": "https://splitify.arthdristi.com/",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Splitify — Free & Private Expense Splitter",
+        "description": "Calculate equal, percentage, or custom bill splits 100% offline in your browser.",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "jsonLd": {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Splitify",
+        "operatingSystem": "All",
+        "applicationCategory": "FinanceApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Browser-first, private shared expense calculator for trips, dinners, and group expenses.",
+        "url": "https://splitify.arthdristi.com/"
+      }
+    },
+    "help": {
+      "path": "/help",
+      "title": "Help & Guide — How to Split Expenses Offline | Splitify",
+      "description": "Step-by-step instructions on creating trip sessions, 4 bill split modes (Equal, %, Shares, Custom), installing the PWA, generating 24-hr share links, and managing offline data.",
+      "keywords": "how to split bills, expense splitter tutorial, equal bill split guide, install splitify pwa, offline trip bill calculator guide",
+      "canonical": "https://splitify.arthdristi.com/help/",
+      "og": {
+        "title": "Help & User Guide — Splitify Expense Splitter",
+        "description": "Learn how to calculate group balances, install the offline PWA, and share trip links securely.",
+        "type": "article",
+        "url": "https://splitify.arthdristi.com/help/",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "twitter": {
+        "card": "summary_large_image",
+        "title": "Help & Guide — Splitify",
+        "description": "Step-by-step user guide for splitting trip expenses, managing group balances, and offline usage.",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "jsonLd": {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does Splitify calculate group balances?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Splitify uses an intelligent greedy debt simplification algorithm to minimize total payments between group members into the fewest possible direct transactions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my financial expense data stored on a central server?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Splitify stores 100% of your session and expense data locally inside your device browser using IndexedDB. No accounts or server logins are required."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do temporary trip share links work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "When you generate a share link, a temporary copy of your trip data is uploaded for 24 hours. Friends can import the trip directly into their browser, after which the link automatically expires and deletes itself."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Splitify without an internet connection?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Splitify is built as a Progressive Web App (PWA). You can install it on iOS, Android, or Desktop and run it completely offline without internet."
+            }
+          }
+        ]
+      }
+    },
+    "terms": {
+      "path": "/terms",
+      "title": "Terms & Conditions — Data Ownership & Usage | Splitify",
+      "description": "Splitify terms of service, client-side local storage disclaimers, transaction link and JSON/CSV exported data disclaimers, user responsibility for PII, and legal immunity clauses.",
+      "keywords": "splitify terms of service, expense splitter legal terms, client side data policy, transaction link disclaimer, exported data JSON CSV disclaimer, splitify usage terms",
+      "canonical": "https://splitify.arthdristi.com/terms/",
+      "og": {
+        "title": "Terms & Conditions — Splitify",
+        "description": "Terms of service, client-side data disclaimers, transaction links and exported data (JSON/CSV) user responsibility, and legal immunity policies for Splitify.",
+        "type": "website",
+        "url": "https://splitify.arthdristi.com/terms/",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "twitter": {
+        "card": "summary",
+        "title": "Terms & Conditions — Splitify",
+        "description": "Review Splitify's software terms, transaction link & exported data disclaimers, and legal immunity guidelines.",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "jsonLd": {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Terms and Conditions",
+        "description": "Legal terms, transaction link & exported JSON/CSV data disclaimers, and user agreement for Splitify zero-backend expense calculator.",
+        "url": "https://splitify.arthdristi.com/terms/"
+      }
+    },
+    "privacy": {
+      "path": "/privacy",
+      "title": "Privacy Policy — Zero Cloud Data Retention | Splitify",
+      "description": "Splitify privacy policy. Zero server PII collection, user responsibility for transaction links and exported JSON/CSV data, and complete privacy disclaimers.",
+      "keywords": "splitify privacy policy, private expense splitter, zero server PII storage, transaction link disclaimer, exported JSON CSV disclaimer, browser local storage privacy",
+      "canonical": "https://splitify.arthdristi.com/privacy/",
+      "og": {
+        "title": "Privacy Policy — Splitify",
+        "description": "100% Client-Side Privacy Policy. Zero PII storage, user responsibility for transaction links & exported files, and complete disclaimers.",
+        "type": "website",
+        "url": "https://splitify.arthdristi.com/privacy/",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "twitter": {
+        "card": "summary",
+        "title": "Privacy Policy — Splitify",
+        "description": "Read our zero-tracking privacy policy, transaction link & exported data disclaimers, and legal immunity guidelines.",
+        "image": "https://splitify.arthdristi.com/logo-512.png"
+      },
+      "jsonLd": {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Privacy Policy",
+        "description": "Privacy disclosure detailing zero PII storage, transaction link & exported JSON/CSV data disclaimers, and local browser persistence.",
+        "url": "https://splitify.arthdristi.com/privacy/"
+      }
+    }
+  }
+}

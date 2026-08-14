@@ -13,16 +13,18 @@ import { BalancesView } from "./components/BalancesView";
 import { ExportSettings } from "./components/ExportSettings";
 import { DeleteShieldModal } from "./components/DeleteShieldModal";
 import { HelpPage } from "./components/HelpPage";
+import { TermsPage } from "./components/TermsPage";
+import { PrivacyPage } from "./components/PrivacyPage";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { NavTabs } from "./components/NavTabs";
 import { PWAInstallBanner } from "./components/PWAInstallBanner";
 
 import { usePWAInstall } from "./hooks/usePWAInstall";
 import { useServiceWorkerUpdate } from "./hooks/useServiceWorkerUpdate";
-
 import { ImportModal } from "./components/ImportModal";
+import { applySEO } from "./utils/seo";
 
-type TabType = "overview" | "transactions" | "add-expense" | "balances" | "settings" | "help";
+type TabType = "overview" | "transactions" | "add-expense" | "balances" | "settings" | "help" | "terms" | "privacy";
 
 // Repository instance (IndexedDB with memory fallback)
 const repository = typeof indexedDB !== "undefined"
@@ -51,20 +53,72 @@ export function App() {
   // Auto-save feedback
   const [autoSaveStatus, setAutoSaveStatus] = useState("Saved locally");
 
-  // Load sessions & check for share link parameters on mount
+  // Route & SEO Sync helper
+  const navigateToTab = (tab: TabType, updateHistory = true) => {
+    setActiveTab(tab);
+
+    let targetPath = "/";
+    if (tab === "help") targetPath = "/help";
+    else if (tab === "terms") targetPath = "/terms";
+    else if (tab === "privacy") targetPath = "/privacy";
+
+    if (updateHistory && typeof window !== "undefined" && window.history && window.history.pushState) {
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({}, "", targetPath);
+      }
+    }
+
+    applySEO(tab === "help" ? "help" : tab === "terms" ? "terms" : tab === "privacy" ? "privacy" : "home");
+  };
+
+  // Load sessions & check for share link / pathname route parameters on mount
   useEffect(() => {
     loadSessions();
+
+    const pathname = window.location.pathname.replace(/\/$/, "") || "/";
+    if (pathname === "/help") {
+      setActiveTab("help");
+      applySEO("help");
+    } else if (pathname === "/terms") {
+      setActiveTab("terms");
+      applySEO("terms");
+    } else if (pathname === "/privacy") {
+      setActiveTab("privacy");
+      applySEO("privacy");
+    } else {
+      applySEO("home");
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const shareParam = urlParams.get("share");
     if (shareParam) {
       setPendingShareId(shareParam);
     }
+
+    // Handle browser Back/Forward navigation
+    const handlePopState = () => {
+      const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+      if (currentPath === "/help") {
+        setActiveTab("help");
+        applySEO("help");
+      } else if (currentPath === "/terms") {
+        setActiveTab("terms");
+        applySEO("terms");
+      } else if (currentPath === "/privacy") {
+        setActiveTab("privacy");
+        applySEO("privacy");
+      } else {
+        setActiveTab("overview");
+        applySEO("home");
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   const handleCloseImportModal = () => {
     setPendingShareId(null);
-    // Clean URL query parameter without page reload
     if (window.history && window.history.replaceState) {
       const url = new URL(window.location.href);
       url.searchParams.delete("share");
@@ -117,7 +171,7 @@ export function App() {
     };
 
     await saveActiveSession(newSession);
-    setActiveTab("overview");
+    navigateToTab("overview");
   };
 
   // Delete session handler
@@ -168,7 +222,7 @@ export function App() {
     };
 
     await saveActiveSession(updatedSession);
-    setActiveTab("transactions");
+    navigateToTab("transactions");
   };
 
   // Delete Expense
@@ -277,9 +331,9 @@ export function App() {
       <Navbar
         onGoHome={() => {
           setActiveSession(null);
-          setActiveTab("overview");
+          navigateToTab("overview");
         }}
-        onOpenHelp={() => setActiveTab("help")}
+        onOpenHelp={() => navigateToTab("help")}
         currentSessionName={activeSession?.name}
         autoSaveStatus={autoSaveStatus}
         isInstallable={pwaInstall.isInstallable}
@@ -292,7 +346,10 @@ export function App() {
       <main style={{ flex: 1 }}>
         {currentTab === "help" ? (
           <HelpPage
-            onBackToApp={() => setActiveTab("overview")}
+            onBackToApp={() => navigateToTab("overview")}
+            onNavigateHelp={() => navigateToTab("help")}
+            onNavigateTerms={() => navigateToTab("terms")}
+            onNavigatePrivacy={() => navigateToTab("privacy")}
             isInstallable={pwaInstall.isInstallable}
             isInstalled={pwaInstall.isInstalled}
             onPromptInstall={pwaInstall.promptInstall}
@@ -301,18 +358,32 @@ export function App() {
             hasUpdate={swUpdate.hasUpdate}
             onApplyUpdate={swUpdate.applyUpdate}
           />
+        ) : currentTab === "terms" ? (
+          <TermsPage
+            onBackToApp={() => navigateToTab("overview")}
+            onNavigateHelp={() => navigateToTab("help")}
+            onNavigateTerms={() => navigateToTab("terms")}
+            onNavigatePrivacy={() => navigateToTab("privacy")}
+          />
+        ) : currentTab === "privacy" ? (
+          <PrivacyPage
+            onBackToApp={() => navigateToTab("overview")}
+            onNavigateHelp={() => navigateToTab("help")}
+            onNavigateTerms={() => navigateToTab("terms")}
+            onNavigatePrivacy={() => navigateToTab("privacy")}
+          />
         ) : !activeSession ? (
           <SessionList
             sessions={sessions}
             onSelectSession={(s) => {
               setActiveSession(s);
-              setActiveTab("overview");
+              navigateToTab("overview");
             }}
             onOpenCreateModal={() => setIsCreateModalOpen(true)}
             onRestoreSession={async (imported) => {
               await saveActiveSession(imported);
               setActiveSession(imported);
-              setActiveTab("overview");
+              navigateToTab("overview");
             }}
             onDeleteSessionPrompt={(s) => setSessionToDelete(s)}
             isInstallable={pwaInstall.isInstallable}
@@ -323,12 +394,12 @@ export function App() {
           <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
             {/* NavTabs with Left / Right Scroll Controls */}
             <NavTabs
-              activeTab={currentTab}
+              activeTab={currentTab as "overview" | "transactions" | "add-expense" | "balances" | "settings"}
               onTabChange={(tab) => {
                 if (tab === "add-expense") {
                   setEditingExpense(null);
                 }
-                setActiveTab(tab);
+                navigateToTab(tab as TabType);
               }}
               expenseCount={activeSession.expenses.length}
             />
@@ -349,7 +420,7 @@ export function App() {
                 participants={activeSession.participants}
                 onEditExpense={(expense) => {
                   setEditingExpense(expense);
-                  setActiveTab("add-expense");
+                  navigateToTab("add-expense");
                 }}
                 onDeleteExpense={handleDeleteExpense}
               />
@@ -360,7 +431,7 @@ export function App() {
                 participants={activeSession.participants}
                 initialExpense={editingExpense || undefined}
                 onSave={handleSaveExpense}
-                onCancel={() => setActiveTab("transactions")}
+                onCancel={() => navigateToTab("transactions")}
               />
             )}
 
@@ -402,7 +473,7 @@ export function App() {
           if (tab === "add-expense") {
             setEditingExpense(null);
           }
-          setActiveTab(tab);
+          navigateToTab(tab);
         }}
         hasActiveSession={Boolean(activeSession)}
       />
@@ -428,7 +499,7 @@ export function App() {
         onImportSession={async (imported) => {
           await saveActiveSession(imported);
           setActiveSession(imported);
-          setActiveTab("overview");
+          navigateToTab("overview");
         }}
       />
     </div>

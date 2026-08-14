@@ -1,9 +1,11 @@
 import React from "react";
 import { LayoutDashboard, ListFilter, PlusCircle, Scale, HelpCircle } from "lucide-react";
 
+export type MobileTabType = "overview" | "transactions" | "add-expense" | "balances" | "help" | "settings" | "terms" | "privacy";
+
 interface MobileBottomNavProps {
-  activeTab: "overview" | "transactions" | "add-expense" | "balances" | "help" | "settings";
-  onTabChange: (tab: "overview" | "transactions" | "add-expense" | "balances" | "help" | "settings") => void;
+  activeTab: MobileTabType;
+  onTabChange: (tab: MobileTabType) => void;
   hasActiveSession: boolean;
 }
 

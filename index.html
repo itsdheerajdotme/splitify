@@ -2,20 +2,84 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Splitify — Free, Private & Offline Group Expense Splitter</title>
+    <meta name="title" content="Splitify — Free, Private & Offline Group Expense Splitter" />
+    <meta name="description" content="Splitify is a fast, 100% private, browser-first expense splitter for trips, dinners, and roommates. Calculate equal, percentage, or custom bill splits without logins or backend tracking." />
+    <meta name="keywords" content="expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, Splitwise alternative private, group expense tracker" />
+    <meta name="author" content="@itsdheeraj.me" />
+    <link rel="canonical" href="https://splitify.arthdristi.com/" />
+
+    <!-- Icons & Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" type="image/png" href="/logo-32.png" />
     <link rel="apple-touch-icon" href="/logo-192.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+    <!-- PWA & Mobile Theme -->
     <meta name="theme-color" content="#0f172a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Splitify" />
-    <meta name="description" content="Splitify - Fast, private, browser-first shared expense calculator for trips, dinners, and group events." />
-    <title>Splitify — Zero-Backend Expense Splitter</title>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://splitify.arthdristi.com/" />
+    <meta property="og:title" content="Splitify — Zero-Backend Shared Expense Calculator" />
+    <meta property="og:description" content="Fast, private, browser-first expense calculator for trips, dinners, and group outings." />
+    <meta property="og:image" content="https://splitify.arthdristi.com/logo-512.png" />
+    <meta property="og:site_name" content="Splitify" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@itsdheeraj" />
+    <meta name="twitter:title" content="Splitify — Free & Private Expense Splitter" />
+    <meta name="twitter:description" content="Calculate equal, percentage, or custom bill splits 100% offline in your browser." />
+    <meta name="twitter:image" content="https://splitify.arthdristi.com/logo-512.png" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" id="seo-jsonld">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Splitify",
+      "operatingSystem": "All",
+      "applicationCategory": "FinanceApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Browser-first, private shared expense calculator for trips, dinners, and group expenses.",
+      "url": "https://splitify.arthdristi.com/"
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Fallback content for search engines without JS enabled -->
+      <header>
+        <h1>Splitify — Zero-Backend Shared Expense Calculator</h1>
+        <p>Fast, private, browser-first shared expense calculator for trips, dinners, outings, and roommate expenses.</p>
+      </header>
+      <main>
+        <section>
+          <h2>Key Features</h2>
+          <ul>
+            <li>100% Client-Side Privacy: All data stays in your browser (IndexedDB).</li>
+            <li>4 Flexible Split Methods: Equal, Percentage (%), By Shares, and Custom Rupee amounts.</li>
+            <li>Greedy Debt Simplification: Reduces 15 transactions to the absolute minimum payment steps.</li>
+            <li>Progressive Web App (PWA): Works completely offline with zero internet access required.</li>
+            <li>24-Hour Temporary Share Links: Share trip data securely without central user accounts.</li>
+          </ul>
+        </section>
+      </main>
+      <footer>
+        <p>&copy; 2026 Splitify. All rights reserved. | <a href="/help">Help & Guide</a> | <a href="/terms">Terms & Conditions</a> | <a href="/privacy">Privacy Policy</a></p>
+      </footer>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
