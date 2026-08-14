@@ -2,10 +2,11 @@
   "name": "Splitify",
   "shortName": "Splitify",
   "tagline": "Forever free, forever private, forever yours.",
+  "domainUrl": "https://splitify.arthdristi.com",
   "description": "Fast, private, browser-first shared expense calculator for trips, dinners, outings, and roommate expenses.",
-  "supportEmail": "hello@arthdristi.com",
+  "supportEmail": "splitify@arthdristi.com",
   "supportPhone": "",
-  "copyright": "© 2026 Splitify. All rights reserved. | Made with ❤️ by ArthDristi.com",
+  "copyright": "© 2026 Splitify. All rights reserved. | Made with ❤️ by @itsdheeraj.me",
   "privacyNotice": "100% Client-Side. Your expense data never leaves your browser.",
   "logos": {
     "favicon": "/favicon.svg",

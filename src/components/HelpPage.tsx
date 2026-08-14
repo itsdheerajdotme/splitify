@@ -157,17 +157,60 @@ export const HelpPage: React.FC<HelpPageProps> = ({ onBackToApp }) => {
               <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: "var(--accent-light)", color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>
                 5
               </div>
-              <h3 style={{ fontSize: "1.1rem" }}>CSV Export & Offline JSON Backup</h3>
+              <h3 style={{ fontSize: "1.1rem" }}>Sharing Trips via 24-Hour Web Links</h3>
             </div>
             {openSection === 5 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
 
           {openSection === 5 && (
             <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)", fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              <p style={{ marginBottom: "0.75rem" }}>
+                Splitify allows you to instantly share an entire trip session with friends using a secure, temporary web link without requiring any user registration:
+              </p>
+              <ol style={{ paddingLeft: "1.25rem", display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.75rem" }}>
+                <li>Navigate to the <strong>Settings & Export</strong> tab inside your active trip.</li>
+                <li>Click <strong>Share Trip Link</strong> under the <em>Share & Export Data</em> card.</li>
+                <li>Splitify generates a custom short link (e.g. <code>{siteConfig.domainUrl}/?share=x7k9p2</code>).</li>
+                <li>Use <strong>Copy Link</strong> or click <strong>Send via App</strong> to share directly via WhatsApp, Telegram, iMessage, or Email.</li>
+              </ol>
+
+              <div className="card" style={{ backgroundColor: "var(--bg-input)", padding: "0.75rem 1rem", marginTop: "0.75rem", marginBottom: "0.75rem", borderLeft: "3px solid #eab308" }}>
+                <strong style={{ color: "var(--text-main)", display: "block", marginBottom: "0.25rem" }}>⚡ 24-Hour Expiration & Privacy:</strong>
+                Share links auto-expire and hard-delete automatically from cloud storage after <strong>24 hours</strong>. This keeps your data private while giving your group plenty of time to view and import.
+              </div>
+
+              <p style={{ marginTop: "0.5rem" }}>
+                <strong>Opening & Importing:</strong> When your friend opens the link, Splitify displays an instant trip preview showing members, total spent, and expense count. Clicking <strong>Import & Open Trip</strong> saves the entire session into their browser storage for offline editing.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Step 6 */}
+        <div className="card">
+          <div
+            className="flex items-center justify-between"
+            style={{ cursor: "pointer" }}
+            onClick={() => toggleSection(6)}
+          >
+            <div className="flex items-center gap-3">
+              <div style={{ width: "32px", height: "32px", borderRadius: "50%", backgroundColor: "var(--accent-light)", color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>
+                6
+              </div>
+              <h3 style={{ fontSize: "1.1rem" }}>CSV Export & Offline JSON Backup</h3>
+            </div>
+            {openSection === 6 ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
+
+          {openSection === 6 && (
+            <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)", fontSize: "0.9rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              <p style={{ marginBottom: "0.75rem" }}>
+                Because all data stays local to your browser, Splitify provides full backup and reporting tools under the <strong>Settings</strong> tab:
+              </p>
               <ul style={{ paddingLeft: "1.25rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <li><strong>Export CSV</strong>: Generates an Excel/Google Sheets compatible spreadsheet report of all expenses.</li>
-                <li><strong>Download Backup JSON</strong>: Downloads your full session state to transfer to another device or keep as a safe backup.</li>
-                <li><strong>Restore Session</strong>: Use <em>Import JSON Backup</em> on any browser to restore your saved trips instantly.</li>
+                <li><strong>Export Formatted CSV</strong>: Downloads an Excel & Google Sheets ready report containing participant shares, dates, categories, payment notes, and totals.</li>
+                <li><strong>Download Backup JSON</strong>: Downloads a full, uncompressed JSON backup file of your trip session.</li>
+                <li><strong>Restore Session from JSON File</strong>: Upload any previously saved <code>.json</code> backup file on a new phone or computer to instantly restore all trip expenses and participant records.</li>
               </ul>
             </div>
           )}

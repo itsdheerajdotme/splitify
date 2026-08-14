@@ -1,6 +1,8 @@
 import { Session } from "../domain/types";
 import { importSessionFromJson } from "./export-import";
 
+import siteConfig from "../config/site.json";
+
 export interface ShareResult {
   shareId: string;
   shareUrl: string;
@@ -52,9 +54,9 @@ export async function createSharedTripLink(session: Session): Promise<ShareResul
   const data = (await response.json()) as { shareId: string; expiresAt: string };
   
   // Construct the full share URL
-  const baseUrl = typeof window !== "undefined"
+  const baseUrl = typeof window !== "undefined" && window.location.origin
     ? window.location.origin + window.location.pathname
-    : "http://localhost:5173/";
+    : siteConfig.domainUrl;
   const shareUrl = `${baseUrl}?share=${data.shareId}`;
 
   return {
