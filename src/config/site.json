@@ -8,6 +8,9 @@
   "supportPhone": "",
   "copyright": "© 2026 Splitify. All rights reserved. | Made with ❤️ by @itsdheeraj.me",
   "privacyNotice": "100% Client-Side. Your expense data never leaves your browser.",
+  "analytics": {
+    "googleAnalyticsId": "G-RSG223ZQH3"
+  },
   "logos": {
     "favicon": "/favicon.svg",
     "size32": "/logo-32.png",

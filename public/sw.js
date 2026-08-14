@@ -39,8 +39,13 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-  // Skip non-GET requests or external extensions
-  if (request.method !== 'GET' || !request.url.startsWith('http')) {
+  // Skip non-GET requests, external extensions, or analytics trackers
+  if (
+    request.method !== 'GET' ||
+    !request.url.startsWith('http') ||
+    request.url.includes('googletagmanager.com') ||
+    request.url.includes('google-analytics.com')
+  ) {
     return;
   }
 
