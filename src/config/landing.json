@@ -1,0 +1,150 @@
+{
+  "hero": {
+    "trustPill": "🔒 Zero Sign-Up • 100% Local Storage • 📲 Add to Home Screen",
+    "headline": "Split Group Expenses Instantly. Completely Private.",
+    "subheadline": "The zero-nonsense expense calculator for trips, dinners, roommates, and events. Everything stays safely inside your browser — no account, no tracking, no subscription fees.",
+    "primaryCtaText": "Start Splitting Free →",
+    "secondaryCtaText": "Try Interactive Demo →"
+  },
+  "interactiveDemoWidget": {
+    "badge": "LIVE DEMO CALCULATOR",
+    "title": "Test Instant Bill Splitting",
+    "subtitle": "Drag the slider to test split calculations in real-time.",
+    "defaultAmount": 2400,
+    "defaultPeople": 4,
+    "currencySymbol": "₹"
+  },
+  "features": [
+    {
+      "id": "device_only",
+      "icon": "Lock",
+      "title": "100% Device-Only Storage",
+      "description": "All sessions reside in IndexedDB inside your browser. No server database ever touches your money data."
+    },
+    {
+      "id": "no_account",
+      "icon": "Zap",
+      "title": "Zero Account Required",
+      "description": "Start creating trips in under 3 seconds. No email, phone number, or password required."
+    },
+    {
+      "id": "debt_simplification",
+      "icon": "Sparkles",
+      "title": "Smart Debt Simplification",
+      "description": "Built-in greedy balance graph algorithm reduces 10 cross-payments down to the fewest direct settlements."
+    },
+    {
+      "id": "flexible_modes",
+      "icon": "Sliders",
+      "title": "Flexible Split Modes",
+      "description": "Equal splits, exact percentages (%), weighted shares, or custom amounts for complex bills."
+    },
+    {
+      "id": "offline_ready",
+      "icon": "WifiOff",
+      "title": "100% Offline Ready",
+      "description": "Install on your home screen with 1 tap for a full native app experience. Split costs on remote flights, hikes, or road trips with zero internet connection."
+    },
+    {
+      "id": "temp_links",
+      "icon": "Clock",
+      "title": "24-Hour Encrypted Share Links",
+      "description": "Generate temporary trip snapshot links that automatically expire and self-destruct after 24 hours."
+    }
+  ],
+  "comparisonTable": {
+    "title": "Why Choose Splitly?",
+    "subtitle": "See how Splitly compares to traditional cloud-based expense apps.",
+    "rows": [
+      {
+        "feature": "Account / Sign-Up Required",
+        "splitly": "❌ No (Instant Start)",
+        "others": "✅ Mandatory Email/Phone"
+      },
+      {
+        "feature": "Data Storage Location",
+        "splitly": "🔒 100% Local Device (IndexedDB)",
+        "others": "☁ Central Cloud Servers"
+      },
+      {
+        "feature": "Subscription & Paywalls",
+        "splitly": "🆓 100% Forever Free",
+        "others": "💰 Pro Tiers & Daily Limits"
+      },
+      {
+        "feature": "Offline Experience",
+        "splitly": "⚡ 100% Offline (Add to Home Screen)",
+        "others": "⚠️ Limited / Internet Needed"
+      },
+      {
+        "feature": "Data Privacy & Tracking",
+        "splitly": "🛡️ Zero Tracking / Ads",
+        "others": "📊 Behavioral & Ad Analytics"
+      },
+      {
+        "feature": "Data Export",
+        "splitly": "📁 1-Click JSON & CSV Export",
+        "others": "🔒 Locked / Account Restricted"
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "How Splitly Works in 3 Steps",
+    "subtitle": "No passwords, no waiting. Start splitting expenses in seconds.",
+    "steps": [
+      {
+        "step": "01",
+        "title": "Create a Trip",
+        "description": "Enter your trip or event name and add member names — no login required."
+      },
+      {
+        "step": "02",
+        "title": "Add Expenses",
+        "description": "Select who paid and choose Equal, Percentage, Shares, or Custom split."
+      },
+      {
+        "step": "03",
+        "title": "Settle Up",
+        "description": "View minimal payment settlements and share summary text or link."
+      }
+    ]
+  },
+  "securityGuarantee": {
+    "title": "Your Privacy Is Guaranteed by Design",
+    "subtitle": "We believe financial privacy should be standard, not a premium feature.",
+    "bullets": [
+      "Zero server databases storing your names or amounts",
+      "100% offline support — works completely disconnected from the internet",
+      "Add to your Home Screen with 1 tap for an instant native app experience",
+      "Instant 1-click JSON and CSV exports so you own 100% of your data"
+    ]
+  },
+  "faqs": [
+    {
+      "question": "Is Splitly really 100% free?",
+      "answer": "Yes! Splitly is completely free with no pro subscriptions, daily limits, or hidden fees. Forever free, forever private, forever yours."
+    },
+    {
+      "question": "Where is my expense data stored?",
+      "answer": "Your financial data is stored 100% locally inside your browser using IndexedDB. No backend server database ever collects or reads your expense data."
+    },
+    {
+      "question": "Can I use Splitly offline or install it as an app?",
+      "answer": "Yes! You can add Splitly to your home screen with 1 tap for a full native app experience. Once added, it runs 100% offline without cellular or Wi-Fi connectivity."
+    },
+    {
+      "question": "How do temporary 24-hour share links work?",
+      "answer": "When you choose to generate a share link, a temporary snapshot of your trip is encrypted and made accessible for 24 hours so friends can import it into their browser. After 24 hours, the server snapshot automatically self-destructs."
+    },
+    {
+      "question": "Can I export my trip data?",
+      "answer": "Absolutely. You can export complete trip sessions as standard JSON or readable CSV spreadsheet files anytime from the settings tab."
+    }
+  ],
+  "ctaBanner": {
+    "title": "Stop stressing over split bills. Start splitting free today.",
+    "subtitle": "Add Splitly to your home screen for an instant 100% offline native experience.",
+    "primaryButtonText": "Launch Splitly App Now →",
+    "secondaryButtonText": "Explore Interactive Demo →"
+  }
+}

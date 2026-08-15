@@ -23,7 +23,7 @@ export interface SEOPageData {
   jsonLd: Record<string, unknown>;
 }
 
-export type SEOPageKey = "home" | "help" | "terms" | "privacy";
+export type SEOPageKey = "home" | "demo" | "help" | "terms" | "privacy";
 
 /**
  * Returns SEO data for a given page key or pathname
@@ -31,6 +31,9 @@ export type SEOPageKey = "home" | "help" | "terms" | "privacy";
 export function getSEOForPath(pathname: string): SEOPageData {
   const cleanPath = pathname.replace(/\/$/, "") || "/";
 
+  if (cleanPath === "/demo") {
+    return seoConfig.pages.demo as SEOPageData;
+  }
   if (cleanPath === "/help") {
     return seoConfig.pages.help as SEOPageData;
   }

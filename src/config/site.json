@@ -1,13 +1,19 @@
 {
-  "name": "Splitify",
-  "shortName": "Splitify",
+  "name": "Splitly",
+  "shortName": "Splitly",
   "tagline": "Forever free, forever private, forever yours.",
-  "domainUrl": "https://splitify.arthdristi.com",
+  "landingDomainUrl": "https://splitly.in",
+  "domainUrl": "https://splitly.in",
+  "appUrl": "https://app.splitly.in",
+  "demoUrl": "https://app.splitly.in/demo",
   "description": "Fast, private, browser-first shared expense calculator for trips, dinners, outings, and roommate expenses.",
-  "supportEmail": "splitify@arthdristi.com",
+  "supportEmail": "hello@splitly.in",
   "supportPhone": "",
-  "copyright": "© 2026 Splitify. All rights reserved. | Made with ❤️ by @itsdheeraj.me",
+  "copyright": "© 2026 Splitly. All rights reserved. | Made with ❤️ by @itsdheeraj.me",
   "privacyNotice": "100% Client-Side. Your expense data never leaves your browser.",
+  "routing": {
+    "homeMode": "landing"
+  },
   "analytics": {
     "googleAnalyticsId": "G-RSG223ZQH3"
   },

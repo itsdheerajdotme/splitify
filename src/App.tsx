@@ -3,6 +3,7 @@ import { Session, Expense, Settlement, Participant } from "./domain/types";
 import { calculateBalances } from "./domain/balance-engine";
 import { simplifyBalances } from "./domain/simplifier";
 import { IndexedDBSessionRepository, InMemorySessionRepository } from "./repositories/indexeddb-repository";
+import siteConfig from "./config/site.json";
 
 import { Navbar } from "./components/Navbar";
 import { SessionList } from "./components/SessionList";
@@ -15,6 +16,8 @@ import { DeleteShieldModal } from "./components/DeleteShieldModal";
 import { HelpPage } from "./components/HelpPage";
 import { TermsPage } from "./components/TermsPage";
 import { PrivacyPage } from "./components/PrivacyPage";
+import { LandingPage } from "./components/LandingPage";
+import { DemoBanner } from "./components/DemoBanner";
 import { MobileBottomNav } from "./components/MobileBottomNav";
 import { NavTabs } from "./components/NavTabs";
 import { PWAInstallBanner } from "./components/PWAInstallBanner";
@@ -23,8 +26,18 @@ import { usePWAInstall } from "./hooks/usePWAInstall";
 import { useServiceWorkerUpdate } from "./hooks/useServiceWorkerUpdate";
 import { ImportModal } from "./components/ImportModal";
 import { applySEO } from "./utils/seo";
+import { DEMO_SESSION_ID, loadOrResetDemoSession } from "./domain/demo-data";
 
-type TabType = "overview" | "transactions" | "add-expense" | "balances" | "settings" | "help" | "terms" | "privacy";
+export type TabType =
+  | "landing"
+  | "overview"
+  | "transactions"
+  | "add-expense"
+  | "balances"
+  | "settings"
+  | "help"
+  | "terms"
+  | "privacy";
 
 // Repository instance (IndexedDB with memory fallback)
 const repository = typeof indexedDB !== "undefined"
@@ -34,7 +47,9 @@ const repository = typeof indexedDB !== "undefined"
 export function App() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSession, setActiveSession] = useState<Session | null>(null);
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+
+  const homeIsLanding = siteConfig.routing?.homeMode === "landing";
+  const [activeTab, setActiveTab] = useState<TabType>(homeIsLanding ? "landing" : "overview");
 
   // PWA & Service Worker hooks
   const pwaInstall = usePWAInstall();
@@ -53,6 +68,8 @@ export function App() {
   // Auto-save feedback
   const [autoSaveStatus, setAutoSaveStatus] = useState("Saved locally");
 
+  const isDemoActive = activeSession?.id === DEMO_SESSION_ID;
+
   // Route & SEO Sync helper
   const navigateToTab = (tab: TabType, updateHistory = true) => {
     setActiveTab(tab);
@@ -61,6 +78,7 @@ export function App() {
     if (tab === "help") targetPath = "/help";
     else if (tab === "terms") targetPath = "/terms";
     else if (tab === "privacy") targetPath = "/privacy";
+    else if (tab === "landing") targetPath = "/";
 
     if (updateHistory && typeof window !== "undefined" && window.history && window.history.pushState) {
       if (window.location.pathname !== targetPath) {
@@ -71,12 +89,63 @@ export function App() {
     applySEO(tab === "help" ? "help" : tab === "terms" ? "terms" : tab === "privacy" ? "privacy" : "home");
   };
 
+  // Launch real app or navigate to app URL from site.json
+  const handleLaunchApp = () => {
+    if (siteConfig.appUrl) {
+      try {
+        const targetUrl = new URL(siteConfig.appUrl, window.location.href).href;
+        if (window.location.href !== targetUrl && !window.location.href.startsWith(targetUrl)) {
+          window.location.href = siteConfig.appUrl;
+          return;
+        }
+      } catch (_) {
+        window.location.href = siteConfig.appUrl;
+        return;
+      }
+    }
+    setActiveTab("overview");
+    if (window.history && window.history.pushState) {
+      window.history.pushState({}, "", "/");
+    }
+    applySEO("home");
+  };
+
+  // Handle Demo Mode launch / reset or navigate to demo URL from site.json
+  const handleTriggerDemo = async () => {
+    if (siteConfig.demoUrl) {
+      try {
+        const targetUrl = new URL(siteConfig.demoUrl, window.location.href).href;
+        if (window.location.href !== targetUrl && !window.location.href.startsWith(targetUrl)) {
+          window.location.href = siteConfig.demoUrl;
+          return;
+        }
+      } catch (_) {
+        window.location.href = siteConfig.demoUrl;
+        return;
+      }
+    }
+    try {
+      const demoSess = await loadOrResetDemoSession(repository);
+      await loadSessions();
+      setActiveSession(demoSess);
+      setActiveTab("overview");
+      if (window.history && window.history.pushState) {
+        window.history.pushState({}, "", "/demo");
+      }
+      applySEO("demo");
+    } catch (err) {
+      console.error("Failed to load demo:", err);
+    }
+  };
+
   // Load sessions & check for share link / pathname route parameters on mount
   useEffect(() => {
     loadSessions();
 
     const pathname = window.location.pathname.replace(/\/$/, "") || "/";
-    if (pathname === "/help") {
+    if (pathname === "/demo") {
+      handleTriggerDemo();
+    } else if (pathname === "/help") {
       setActiveTab("help");
       applySEO("help");
     } else if (pathname === "/terms") {
@@ -86,6 +155,11 @@ export function App() {
       setActiveTab("privacy");
       applySEO("privacy");
     } else {
+      if (homeIsLanding) {
+        setActiveTab("landing");
+      } else {
+        setActiveTab("overview");
+      }
       applySEO("home");
     }
 
@@ -98,7 +172,9 @@ export function App() {
     // Handle browser Back/Forward navigation
     const handlePopState = () => {
       const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
-      if (currentPath === "/help") {
+      if (currentPath === "/demo") {
+        handleTriggerDemo();
+      } else if (currentPath === "/help") {
         setActiveTab("help");
         applySEO("help");
       } else if (currentPath === "/terms") {
@@ -108,7 +184,11 @@ export function App() {
         setActiveTab("privacy");
         applySEO("privacy");
       } else {
-        setActiveTab("overview");
+        if (homeIsLanding) {
+          setActiveTab("landing");
+        } else {
+          setActiveTab("overview");
+        }
         applySEO("home");
       }
     };
@@ -258,22 +338,11 @@ export function App() {
     await saveActiveSession(updatedSession);
   };
 
-  // Rename Session
-  const handleRenameSession = async (newName: string) => {
-    if (!activeSession) return;
-    const updatedSession: Session = {
-      ...activeSession,
-      name: newName,
-      updatedAt: new Date().toISOString(),
-    };
-    await saveActiveSession(updatedSession);
-  };
-
-  // Participant CRUD
+  // Participant Management
   const handleAddParticipant = async (name: string) => {
     if (!activeSession) return;
     const now = new Date().toISOString();
-    const newParticipant: Participant = {
+    const newP: Participant = {
       id: `p_${Date.now()}`,
       name,
       createdAt: now,
@@ -281,7 +350,7 @@ export function App() {
     };
     const updatedSession: Session = {
       ...activeSession,
-      participants: [...activeSession.participants, newParticipant],
+      participants: [...activeSession.participants, newP],
       updatedAt: now,
     };
     await saveActiveSession(updatedSession);
@@ -301,6 +370,13 @@ export function App() {
 
   const handleRemoveParticipant = async (participantId: string) => {
     if (!activeSession) return;
+    const hasExpenses = activeSession.expenses.some(
+      (e) => e.paidBy === participantId
+    );
+    if (hasExpenses) {
+      alert("Cannot remove participant who has recorded expenses.");
+      return;
+    }
     const updatedSession: Session = {
       ...activeSession,
       participants: activeSession.participants.filter((p) => p.id !== participantId),
@@ -309,40 +385,113 @@ export function App() {
     await saveActiveSession(updatedSession);
   };
 
+  const handleRenameSession = async (newName: string) => {
+    if (!activeSession) return;
+    const updatedSession: Session = {
+      ...activeSession,
+      name: newName,
+      updatedAt: new Date().toISOString(),
+    };
+    await saveActiveSession(updatedSession);
+  };
+
   // Calculations for Active Session
   const balances = activeSession ? calculateBalances(activeSession) : [];
+
   const simplifiedSuggestions = simplifyBalances(balances);
 
-  const currentTab: TabType = activeTab;
+  const currentTab = activeTab;
+
+  // Render Landing Page if home mode is landing and activeTab === "landing"
+  if (currentTab === "landing") {
+    return (
+      <LandingPage
+        onLaunchApp={handleLaunchApp}
+        onNavigateDemo={handleTriggerDemo}
+        onNavigateHelp={() => navigateToTab("help")}
+        onNavigateTerms={() => navigateToTab("terms")}
+        onNavigatePrivacy={() => navigateToTab("privacy")}
+      />
+    );
+  }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <PWAInstallBanner
-        isInstallable={pwaInstall.isInstallable}
-        isInstalled={pwaInstall.isInstalled}
-        isIOS={pwaInstall.isIOS}
-        showIOSGuide={pwaInstall.showIOSGuide}
-        onCloseIOSGuide={() => pwaInstall.setShowIOSGuide(false)}
-        onPromptInstall={pwaInstall.promptInstall}
-        hasUpdate={swUpdate.hasUpdate}
-        onApplyUpdate={swUpdate.applyUpdate}
-      />
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      {/* Demo Mode Top Banner */}
+      {isDemoActive && (
+        <DemoBanner
+          onResetDemo={handleTriggerDemo}
+          onCreateRealTrip={() => {
+            setIsCreateModalOpen(true);
+          }}
+        />
+      )}
 
-      <Navbar
-        onGoHome={() => {
-          setActiveSession(null);
-          navigateToTab("overview");
-        }}
-        onOpenHelp={() => navigateToTab("help")}
-        currentSessionName={activeSession?.name}
-        autoSaveStatus={autoSaveStatus}
-        isInstallable={pwaInstall.isInstallable}
-        isInstalled={pwaInstall.isInstalled}
-        hasUpdate={swUpdate.hasUpdate}
-        onPromptInstall={pwaInstall.promptInstall}
-        onApplyUpdate={swUpdate.applyUpdate}
-      />
+      {/* Main Top Header Navbar (Hidden on Standalone Info Pages) */}
+      {currentTab !== "help" && currentTab !== "terms" && currentTab !== "privacy" && (
+        <Navbar
+          onGoHome={() => navigateToTab(homeIsLanding ? "landing" : "overview")}
+          onOpenHelp={() => navigateToTab("help")}
+          currentSessionName={activeSession?.name}
+          autoSaveStatus={autoSaveStatus}
+          isInstallable={pwaInstall.isInstallable}
+          isInstalled={pwaInstall.isInstalled}
+          hasUpdate={swUpdate.hasUpdate}
+          onPromptInstall={pwaInstall.promptInstall}
+          onApplyUpdate={swUpdate.applyUpdate}
+        />
+      )}
 
+      {/* PWA Update notification toast banner */}
+      {swUpdate.hasUpdate && (
+        <div
+          style={{
+            backgroundColor: "var(--accent-primary)",
+            color: "var(--text-inverse)",
+            padding: "0.5rem 1rem",
+            textAlign: "center",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.75rem",
+          }}
+        >
+          <span>⚡ A new version of Splitly is available!</span>
+          <button
+            onClick={swUpdate.applyUpdate}
+            style={{
+              backgroundColor: "var(--text-inverse)",
+              color: "var(--accent-primary)",
+              border: "none",
+              padding: "0.25rem 0.65rem",
+              borderRadius: "4px",
+              fontWeight: 700,
+              cursor: "pointer",
+              fontSize: "0.8rem",
+            }}
+          >
+            Update Now
+          </button>
+        </div>
+      )}
+
+      {/* PWA Install Banner */}
+      {currentTab !== "help" && currentTab !== "terms" && currentTab !== "privacy" && (
+        <PWAInstallBanner
+          isInstallable={pwaInstall.isInstallable}
+          isInstalled={pwaInstall.isInstalled}
+          isIOS={pwaInstall.isIOS}
+          showIOSGuide={pwaInstall.showIOSGuide}
+          onCloseIOSGuide={() => pwaInstall.setShowIOSGuide(false)}
+          onPromptInstall={pwaInstall.promptInstall}
+          hasUpdate={swUpdate.hasUpdate}
+          onApplyUpdate={swUpdate.applyUpdate}
+        />
+      )}
+
+      {/* Main Content Body */}
       <main style={{ flex: 1 }}>
         {currentTab === "help" ? (
           <HelpPage
@@ -392,7 +541,7 @@ export function App() {
           />
         ) : (
           <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
-            {/* NavTabs with Left / Right Scroll Controls */}
+            {/* NavTabs */}
             <NavTabs
               activeTab={currentTab as "overview" | "transactions" | "add-expense" | "balances" | "settings"}
               onTabChange={(tab) => {

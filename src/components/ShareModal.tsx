@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Share2, Copy, Check, Clock, AlertCircle, Loader2, Link } from "lucide-react";
 import { Session } from "../domain/types";
 import { createSharedTripLink, ShareResult } from "../services/share-service";
+import { DEMO_SESSION_ID } from "../domain/demo-data";
 
 interface ShareModalProps {
   session: Session | null;
@@ -94,7 +95,9 @@ export const ShareModal: React.FC<ShareModalProps> = ({ session, isOpen, onClose
               Share "{session.name}"
             </h3>
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
-              Create a temporary link to share this session with your group.
+              {session.id === DEMO_SESSION_ID
+                ? "Static share link for the interactive demo session."
+                : "Create a temporary link to share this session with your group."}
             </p>
           </div>
         </div>
@@ -123,7 +126,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ session, isOpen, onClose
           <div className="flex flex-col gap-4">
             <div className="card" style={{ backgroundColor: "var(--bg-input)", padding: "1rem" }}>
               <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "0.5rem", display: "block" }}>
-                SHAREABLE TRIP LINK
+                {session.id === DEMO_SESSION_ID ? "STATIC DEMO LINK" : "SHAREABLE TRIP LINK"}
               </label>
               <div className="flex gap-2">
                 <div
@@ -170,9 +173,13 @@ export const ShareModal: React.FC<ShareModalProps> = ({ session, isOpen, onClose
 
             {/* Expiration Notice & Web Share API */}
             <div className="flex items-center justify-between" style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
-              <div className="flex items-center gap-1.5" style={{ color: "#eab308" }}>
+              <div className="flex items-center gap-1.5" style={{ color: session.id === DEMO_SESSION_ID ? "var(--accent-primary)" : "#eab308" }}>
                 <Clock size={16} />
-                <span>Expires automatically in 24 hours</span>
+                <span>
+                  {session.id === DEMO_SESSION_ID
+                    ? "Static Demo Link (never expires)"
+                    : "Expires automatically in 24 hours"}
+                </span>
               </div>
 
               {Boolean(navigator.share) && (

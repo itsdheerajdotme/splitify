@@ -26,10 +26,26 @@ export function getShareWorkerApiUrl(): string {
   return DEFAULT_WORKER_URL;
 }
 
+import { DEMO_SESSION_ID } from "../domain/demo-data";
+
 /**
  * Uploads a trip session to Cloudflare Worker KV and generates a 24h short link.
+ * For Demo session, returns the static demo URL without network call.
  */
 export async function createSharedTripLink(session: Session): Promise<ShareResult> {
+  if (session.id === DEMO_SESSION_ID) {
+    const origin = typeof window !== "undefined" && window.location.origin
+      ? window.location.origin
+      : "https://app.splitly.in";
+    const staticDemoUrl = siteConfig.demoUrl || `${origin}/demo`;
+
+    return {
+      shareId: "demo",
+      shareUrl: staticDemoUrl,
+      expiresAt: "Permanent",
+    };
+  }
+
   const apiUrl = getShareWorkerApiUrl();
 
   const response = await fetch(`${apiUrl}/api/share`, {

@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
           <div className="min-w-0">
             <h2 className="truncate" style={{ fontSize: "1.1rem", lineHeight: 1.1 }}>
-              {siteConfig.name} <span style={{ fontSize: "0.65rem", color: "var(--accent-primary)", fontWeight: 700, verticalAlign: "middle" }}>PWA</span>
+              {siteConfig.name} <span style={{ fontSize: "0.65rem", color: "var(--accent-primary)", fontWeight: 700, verticalAlign: "middle" }}>OFFLINE</span>
             </h2>
             <p className="hide-mobile truncate" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{siteConfig.tagline}</p>
           </div>

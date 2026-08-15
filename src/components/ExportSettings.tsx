@@ -3,6 +3,7 @@ import { Session } from "../domain/types";
 import { downloadFile, exportSessionToCsv, exportSessionToJson, importSessionFromJson } from "../services/export-import";
 import { FileSpreadsheet, Download, Upload, Trash2, UserPlus, Users, Edit2, Share2, Smartphone, RefreshCw, CheckCircle2 } from "lucide-react";
 import { ShareModal } from "./ShareModal";
+import siteConfig from "../config/site.json";
 
 interface ExportSettingsProps {
   session: Session;
@@ -223,7 +224,7 @@ export const ExportSettings: React.FC<ExportSettingsProps> = ({
 
         <div className="flex items-center justify-between" style={{ backgroundColor: "var(--bg-input)", padding: "0.75rem 1rem", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
           <div>
-            <div style={{ fontSize: "0.85rem", fontWeight: 600 }}>Splitify PWA v1.0.0</div>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600 }}>{siteConfig.name} v1.0.0 (Offline App)</div>
             {lastCheckMessage && (
               <div style={{ fontSize: "0.75rem", color: "var(--accent-primary)", marginTop: "0.15rem" }}>
                 {lastCheckMessage}
