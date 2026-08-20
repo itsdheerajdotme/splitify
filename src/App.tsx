@@ -584,6 +584,7 @@ export function App() {
               navigateToTab("overview");
             }}
             onDeleteSessionPrompt={(s) => setSessionToDelete(s)}
+            onNavigateDemo={handleTriggerDemo}
           />
         ) : (
           <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>

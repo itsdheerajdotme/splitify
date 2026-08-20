@@ -10,6 +10,7 @@ interface SessionListProps {
   onOpenCreateModal: () => void;
   onRestoreSession: (importedSession: Session) => void;
   onDeleteSessionPrompt: (session: Session) => void;
+  onNavigateDemo?: () => void;
 }
 
 export const SessionList: React.FC<SessionListProps> = ({
@@ -18,6 +19,7 @@ export const SessionList: React.FC<SessionListProps> = ({
   onOpenCreateModal,
   onRestoreSession,
   onDeleteSessionPrompt,
+  onNavigateDemo,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -94,9 +96,20 @@ export const SessionList: React.FC<SessionListProps> = ({
           <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "360px", margin: "0 auto 1.25rem" }}>
             Start your first trip or import a JSON backup file.
           </p>
-          <button className="btn btn-primary" onClick={onOpenCreateModal}>
-            <Plus size={16} /> Create Your First Session
-          </button>
+          <div className="flex flex-col items-center gap-2">
+            <button className="btn btn-primary" onClick={onOpenCreateModal}>
+              <Plus size={16} /> Create Your First Session
+            </button>
+            {onNavigateDemo && (
+              <button
+                className="btn btn-ghost btn-sm flex items-center gap-1.5"
+                onClick={onNavigateDemo}
+                style={{ color: "var(--accent-primary)", fontSize: "0.85rem", marginTop: "0.25rem" }}
+              >
+                <Sparkles size={14} /> Explore Sample Demo Session →
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <div className="grid-2">
