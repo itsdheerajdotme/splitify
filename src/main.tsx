@@ -13,3 +13,8 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
+// Clear 5-second initial loader safety timeout once React has mounted
+if (typeof window !== 'undefined' && (window as any).__clearAppLoaderTimeout) {
+  (window as any).__clearAppLoaderTimeout();
+}
+

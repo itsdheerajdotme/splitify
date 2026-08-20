@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
     <!-- Primary SEO Meta Tags -->
-    <title>Terms & Conditions — Data Ownership & Usage | Splitify</title>
-    <meta name="title" content="Terms & Conditions — Data Ownership & Usage | Splitify" />
-    <meta name="description" content="Splitify terms of service, client-side local storage disclaimers, transaction link and JSON/CSV exported data disclaimers, user responsibility for PII, and legal immunity clauses." />
-    <meta name="keywords" content="splitify terms of service, expense splitter legal terms, client side data policy, transaction link disclaimer, exported data JSON CSV disclaimer, splitify usage terms" />
+    <title>Terms & Conditions — Data Ownership & Usage | Splitly</title>
+    <meta name="title" content="Terms & Conditions — Data Ownership & Usage | Splitly" />
+    <meta name="description" content="Splitly terms of service, client-side local storage disclaimers, transaction link and JSON/CSV exported data disclaimers, user responsibility for PII, and legal immunity clauses." />
+    <meta name="keywords" content="splitly terms of service, expense splitter legal terms, client side data policy, transaction link disclaimer, exported data JSON CSV disclaimer, splitly usage terms" />
     <meta name="author" content="@itsdheeraj.me" />
-    <link rel="canonical" href="https://splitify.arthdristi.com/terms/" />
+    <link rel="canonical" href="https://splitly.in/terms/" />
 
     <!-- Icons & Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -22,22 +22,79 @@
     <meta name="theme-color" content="#0f172a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Splitify" />
+    <meta name="apple-mobile-web-app-title" content="Splitly" />
+
+    <!-- Instant Inline CSS to Prevent FOUC -->
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a;
+        color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      #app-initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #0f172a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+      }
+      .app-loader-logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+      .app-loader-spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid rgba(16, 185, 129, 0.2);
+        border-top-color: #10b981;
+        border-radius: 50%;
+        animation: app-loader-spin 0.75s linear infinite;
+        margin-top: 1.25rem;
+      }
+      @keyframes app-loader-spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
+    <!-- 5-Second Maximum Timeout Safeguard -->
+    <script>
+      (function() {
+        var loaderTimeout = setTimeout(function() {
+          var loader = document.getElementById("app-initial-loader");
+          if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 5000);
+        window.__clearAppLoaderTimeout = function() {
+          clearTimeout(loaderTimeout);
+        };
+      })();
+    </script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://splitify.arthdristi.com/terms/" />
-    <meta property="og:title" content="Terms & Conditions — Splitify" />
-    <meta property="og:description" content="Terms of service, client-side data disclaimers, transaction links and exported data (JSON/CSV) user responsibility, and legal immunity policies for Splitify." />
-    <meta property="og:image" content="https://splitify.arthdristi.com/logo-512.png" />
-    <meta property="og:site_name" content="Splitify" />
+    <meta property="og:url" content="https://splitly.in/terms/" />
+    <meta property="og:title" content="Terms & Conditions — Splitly" />
+    <meta property="og:description" content="Terms of service, client-side data disclaimers, transaction links and exported data (JSON/CSV) user responsibility, and legal immunity policies for Splitly." />
+    <meta property="og:image" content="https://splitly.in/logo-512.png" />
+    <meta property="og:site_name" content="Splitly" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@itsdheeraj" />
-    <meta name="twitter:title" content="Terms & Conditions — Splitify" />
-    <meta name="twitter:description" content="Review Splitify's software terms, transaction link & exported data disclaimers, and legal immunity guidelines." />
-    <meta name="twitter:image" content="https://splitify.arthdristi.com/logo-512.png" />
+    <meta name="twitter:title" content="Terms & Conditions — Splitly" />
+    <meta name="twitter:description" content="Review Splitly's software terms, transaction link & exported data disclaimers, and legal immunity guidelines." />
+    <meta name="twitter:image" content="https://splitly.in/logo-512.png" />
 
     <!-- Structured Data (JSON-LD WebPage) -->
     <script type="application/ld+json" id="seo-jsonld">
@@ -45,32 +102,18 @@
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "Terms and Conditions",
-      "description": "Legal terms, transaction link & exported JSON/CSV data disclaimers, and user agreement for Splitify zero-backend expense calculator.",
-      "url": "https://splitify.arthdristi.com/terms/"
+      "description": "Legal terms, transaction link & exported JSON/CSV data disclaimers, and user agreement for Splitly zero-backend expense calculator.",
+      "url": "https://splitly.in/terms/"
     }
     </script>
   </head>
   <body>
     <div id="root">
-      <header>
-        <h1>Terms & Conditions — Splitify</h1>
-        <p>Software licensing, zero-backend data ownership rules, transaction link and exported JSON/CSV data disclaimers, and legal immunity clauses.</p>
-      </header>
-      <main>
-        <section>
-          <h2>1. Full User Agreement & Legal Immunity</h2>
-          <p>By using Splitify, you agree to all terms. Splitify is provided free AS IS. Splitify and its creators are completely exempt from any legal matters, claims, disputes, liabilities, or lawsuits. Splitify does not bind itself to any legal action from users.</p>
-          <h2>2. Transaction Links, Exported Data (JSON/CSV) & Data Handling Disclaimer</h2>
-          <p>Splitify takes zero ownership or responsibility for any data shared or exported through any medium—including transaction links, web URLs, exported JSON backup files, CSV reports, or any other data sharing methods. The user is solely responsible for handling, distributing, and managing transaction links and exported data. Whoever receives, copies, or downloads data acts independently.</p>
-          <h2>3. PII & Sensitive Transaction Data Disclaimer</h2>
-          <p>Splitify does not collect PII or banking credentials. Users entering sensitive notes or data into fields assume full responsibility. Splitify disclaims liability for loss or sharing of user-entered data.</p>
-          <h2>4. Local Storage & Data Ownership</h2>
-          <p>Splitify operates 100% client-side via IndexedDB/LocalStorage. Users maintain local device control.</p>
-        </section>
-      </main>
-      <footer>
-        <p>&copy; 2026 Splitify | <a href="/">Home App</a> | <a href="/help">Help & Guide</a> | <a href="/privacy">Privacy Policy</a></p>
-      </footer>
+      <div id="app-initial-loader">
+        <img src="/logo-128.png" alt="Splitly" class="app-loader-logo" />
+        <div class="app-loader-spinner"></div>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 1rem; font-weight: 500;">Loading Splitly...</p>
+      </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

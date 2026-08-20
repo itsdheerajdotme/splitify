@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     
     <!-- Primary SEO Meta Tags -->
-    <title>Help & Guide — How to Split Expenses Offline | Splitify</title>
-    <meta name="title" content="Help & Guide — How to Split Expenses Offline | Splitify" />
+    <title>Help & Guide — How to Split Expenses Offline | Splitly</title>
+    <meta name="title" content="Help & Guide — How to Split Expenses Offline | Splitly" />
     <meta name="description" content="Step-by-step instructions on creating trip sessions, 4 bill split modes (Equal, %, Shares, Custom), installing the PWA, generating 24-hr share links, and managing offline data." />
-    <meta name="keywords" content="how to split bills, expense splitter tutorial, equal bill split guide, install splitify pwa, offline trip bill calculator guide" />
+    <meta name="keywords" content="how to split bills, expense splitter tutorial, equal bill split guide, install splitly pwa, offline trip bill calculator guide" />
     <meta name="author" content="@itsdheeraj.me" />
-    <link rel="canonical" href="https://splitify.arthdristi.com/help/" />
+    <link rel="canonical" href="https://splitly.in/help/" />
 
     <!-- Icons & Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -22,22 +22,79 @@
     <meta name="theme-color" content="#0f172a" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Splitify" />
+    <meta name="apple-mobile-web-app-title" content="Splitly" />
+
+    <!-- Instant Inline CSS to Prevent FOUC -->
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #0f172a;
+        color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      #app-initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #0f172a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+      }
+      .app-loader-logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+      .app-loader-spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid rgba(16, 185, 129, 0.2);
+        border-top-color: #10b981;
+        border-radius: 50%;
+        animation: app-loader-spin 0.75s linear infinite;
+        margin-top: 1.25rem;
+      }
+      @keyframes app-loader-spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+
+    <!-- 5-Second Maximum Timeout Safeguard -->
+    <script>
+      (function() {
+        var loaderTimeout = setTimeout(function() {
+          var loader = document.getElementById("app-initial-loader");
+          if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 5000);
+        window.__clearAppLoaderTimeout = function() {
+          clearTimeout(loaderTimeout);
+        };
+      })();
+    </script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="https://splitify.arthdristi.com/help/" />
-    <meta property="og:title" content="Help & User Guide — Splitify Expense Splitter" />
+    <meta property="og:url" content="https://splitly.in/help/" />
+    <meta property="og:title" content="Help & User Guide — Splitly Expense Splitter" />
     <meta property="og:description" content="Learn how to calculate group balances, install the offline PWA, and share trip links securely." />
-    <meta property="og:image" content="https://splitify.arthdristi.com/logo-512.png" />
-    <meta property="og:site_name" content="Splitify" />
+    <meta property="og:image" content="https://splitly.in/logo-512.png" />
+    <meta property="og:site_name" content="Splitly" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@itsdheeraj" />
-    <meta name="twitter:title" content="Help & Guide — Splitify" />
+    <meta name="twitter:title" content="Help & Guide — Splitly" />
     <meta name="twitter:description" content="Step-by-step user guide for splitting trip expenses, managing group balances, and offline usage." />
-    <meta name="twitter:image" content="https://splitify.arthdristi.com/logo-512.png" />
+    <meta name="twitter:image" content="https://splitly.in/logo-512.png" />
 
     <!-- Structured Data (JSON-LD FAQPage) -->
     <script type="application/ld+json" id="seo-jsonld">
@@ -47,10 +104,10 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "How does Splitify calculate group balances?",
+          "name": "How does Splitly calculate group balances?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Splitify uses an intelligent greedy debt simplification algorithm to minimize total payments between group members into the fewest possible direct transactions."
+            "text": "Splitly uses an intelligent greedy debt simplification algorithm to minimize total payments between group members into the fewest possible direct transactions."
           }
         },
         {
@@ -58,7 +115,7 @@
           "name": "Is my financial expense data stored on a central server?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Splitify stores 100% of your session and expense data locally inside your device browser using IndexedDB. No accounts or server logins are required."
+            "text": "No. Splitly stores 100% of your session and expense data locally inside your device browser using IndexedDB. No accounts or server logins are required."
           }
         },
         {
@@ -71,10 +128,10 @@
         },
         {
           "@type": "Question",
-          "name": "Can I use Splitify without an internet connection?",
+          "name": "Can I use Splitly without an internet connection?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes! Splitify is built as a Progressive Web App (PWA). You can install it on iOS, Android, or Desktop and run it completely offline without internet."
+            "text": "Yes! Splitly is built as a Progressive Web App (PWA). You can install it on iOS, Android, or Desktop and run it completely offline without internet."
           }
         }
       ]
@@ -83,34 +140,11 @@
   </head>
   <body>
     <div id="root">
-      <header>
-        <h1>Help & User Guide — Splitify</h1>
-        <p>Step-by-step guide on creating trips, adding expenses across 4 split methods, installing home screen app, and working 100% offline.</p>
-      </header>
-      <main>
-        <section>
-          <h2>Frequently Asked Questions</h2>
-          <article>
-            <h3>1. Creating a Trip & Adding Friends</h3>
-            <p>Click New Session / Trip from the home dashboard. Enter a title and member names to launch your trip workspace.</p>
-          </article>
-          <article>
-            <h3>2. 4 Expense Split Methods</h3>
-            <p>Choose between Equal Split, Percentage (%), By Shares, or Custom Rupee Amounts.</p>
-          </article>
-          <article>
-            <h3>3. Debt Simplification</h3>
-            <p>Splitify's algorithm calculates minimum direct payments needed to settle everyone's net position cleanly.</p>
-          </article>
-          <article>
-            <h3>4. Offline Progressive Web App (PWA)</h3>
-            <p>Install Splitify on Android, iPhone (Safari Add to Home Screen), or Desktop for offline expense tracking without internet.</p>
-          </article>
-        </section>
-      </main>
-      <footer>
-        <p>&copy; 2026 Splitify | <a href="/">Home App</a> | <a href="/terms">Terms & Conditions</a> | <a href="/privacy">Privacy Policy</a></p>
-      </footer>
+      <div id="app-initial-loader">
+        <img src="/logo-128.png" alt="Splitly" class="app-loader-logo" />
+        <div class="app-loader-spinner"></div>
+        <p style="font-size: 0.85rem; color: #94a3b8; margin-top: 1rem; font-weight: 500;">Loading Splitly...</p>
+      </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
