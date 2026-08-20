@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Session } from "../domain/types";
 import { formatCurrency, importSessionFromJson } from "../services/export-import";
-import { Plus, Upload, Calendar, Users, FileText, ChevronRight, Trash2, Search, Smartphone, Download } from "lucide-react";
+import { Plus, Upload, Calendar, Users, ArrowLeftRight, ChevronRight, Trash2, Search, Sparkles } from "lucide-react";
+import { DEMO_SESSION_ID } from "../domain/demo-data";
 
 interface SessionListProps {
   sessions: Session[];
@@ -9,9 +10,6 @@ interface SessionListProps {
   onOpenCreateModal: () => void;
   onRestoreSession: (importedSession: Session) => void;
   onDeleteSessionPrompt: (session: Session) => void;
-  isInstallable?: boolean;
-  isInstalled?: boolean;
-  onPromptInstall?: () => void;
 }
 
 export const SessionList: React.FC<SessionListProps> = ({
@@ -20,9 +18,6 @@ export const SessionList: React.FC<SessionListProps> = ({
   onOpenCreateModal,
   onRestoreSession,
   onDeleteSessionPrompt,
-  isInstallable = false,
-  isInstalled = false,
-  onPromptInstall,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -50,48 +45,6 @@ export const SessionList: React.FC<SessionListProps> = ({
 
   return (
     <div className="container" style={{ paddingTop: "1rem", paddingBottom: "3rem" }}>
-      {/* PWA Home Screen Installation Card */}
-      {isInstallable && !isInstalled && onPromptInstall && (
-        <div
-          className="card flex items-center justify-between"
-          style={{
-            backgroundColor: "rgba(30, 41, 59, 0.6)",
-            borderColor: "rgba(59, 130, 246, 0.3)",
-            marginBottom: "1rem",
-            padding: "0.85rem 1rem",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-          }}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "10px",
-                backgroundColor: "rgba(59, 130, 246, 0.15)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <Smartphone size={22} color="#3b82f6" />
-            </div>
-            <div>
-              <strong style={{ fontSize: "0.95rem", display: "block" }}>
-                Add Splitify to Home Screen
-              </strong>
-              <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-                Install shortcut for instant 100% offline access with zero internet required.
-              </span>
-            </div>
-          </div>
-          <button className="btn btn-primary btn-sm" onClick={onPromptInstall}>
-            <Download size={14} /> Add App Shortcut
-          </button>
-        </div>
-      )}
 
       {/* Compact Header Bar */}
       <div className="card flex items-center justify-between" style={{ backgroundColor: "var(--bg-input)", marginBottom: "1rem", padding: "0.85rem 1rem", flexWrap: "wrap", gap: "0.75rem" }}>
@@ -163,7 +116,14 @@ export const SessionList: React.FC<SessionListProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between" style={{ marginBottom: "0.5rem", gap: "0.5rem" }}>
-                    <h3 className="truncate" style={{ fontSize: "1.1rem" }}>{session.name}</h3>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <h3 className="truncate" style={{ fontSize: "1.1rem" }}>{session.name}</h3>
+                      {session.id === DEMO_SESSION_ID && (
+                        <span className="badge badge-amber flex items-center gap-1" style={{ fontSize: "0.68rem", padding: "0.15rem 0.45rem", fontWeight: 700, flexShrink: 0 }}>
+                          <Sparkles size={11} /> [Demo]
+                        </span>
+                      )}
+                    </div>
                     
                     <div className="flex items-center gap-1" style={{ flexShrink: 0 }}>
                       <button
@@ -182,15 +142,15 @@ export const SessionList: React.FC<SessionListProps> = ({
                   </div>
 
                   {/* Clean Icon Badges replacing long text */}
-                  <div className="flex items-center gap-1.5 flex-wrap" style={{ marginBottom: "0.75rem" }}>
-                    <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem" }}>
-                      <Users size={11} /> {session.participants.length}
+                  <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: "0.75rem", marginTop: "0.25rem" }}>
+                    <span className="badge badge-subtle flex items-center gap-1.5" style={{ fontSize: "0.75rem", padding: "0.22rem 0.55rem" }}>
+                      <Users size={12} /> {session.participants.length}
                     </span>
-                    <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem" }}>
-                      <FileText size={11} /> {session.expenses.length}
+                    <span className="badge badge-subtle flex items-center gap-1.5" style={{ fontSize: "0.75rem", padding: "0.22rem 0.55rem" }}>
+                      <ArrowLeftRight size={12} /> {session.expenses.length}
                     </span>
-                    <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem" }}>
-                      <Calendar size={11} /> {lastUpdated}
+                    <span className="badge badge-subtle flex items-center gap-1.5" style={{ fontSize: "0.75rem", padding: "0.22rem 0.55rem" }}>
+                      <Calendar size={12} /> {lastUpdated}
                     </span>
                   </div>
                 </div>

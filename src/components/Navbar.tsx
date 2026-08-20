@@ -1,12 +1,10 @@
 import React from "react";
 import siteConfig from "../config/site.json";
-import { Layout, ShieldCheck, HelpCircle, Download, RefreshCw } from "lucide-react";
+import { Layout, HelpCircle, Download, RefreshCw } from "lucide-react";
 
 interface NavbarProps {
   onGoHome: () => void;
   onOpenHelp: () => void;
-  currentSessionName?: string;
-  autoSaveStatus?: string;
   isInstallable?: boolean;
   isInstalled?: boolean;
   hasUpdate?: boolean;
@@ -17,8 +15,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   onGoHome,
   onOpenHelp,
-  currentSessionName,
-  autoSaveStatus = "Saved locally",
   isInstallable = false,
   isInstalled = false,
   hasUpdate = false,
@@ -49,16 +45,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <p className="hide-mobile truncate" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{siteConfig.tagline}</p>
           </div>
         </div>
-
-        {/* Active Session Name Badge */}
-        {currentSessionName && (
-          <div className="flex items-center gap-1 min-w-0" style={{ backgroundColor: "var(--bg-input)", padding: "0.25rem 0.6rem", borderRadius: "9999px", border: "1px solid var(--border-subtle)", maxWidth: "160px" }}>
-            <span className="truncate" style={{ fontSize: "0.75rem", fontWeight: 600 }}>{currentSessionName}</span>
-            <span className="badge badge-emerald hide-mobile" style={{ fontSize: "0.65rem", padding: "0.15rem 0.4rem" }}>
-              <ShieldCheck size={10} /> {autoSaveStatus}
-            </span>
-          </div>
-        )}
 
         {/* Header Right Action Navigation Buttons */}
         <div className="flex items-center gap-2" style={{ flexShrink: 0 }}>

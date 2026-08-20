@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import siteConfig from "../config/site.json";
-import { ChevronDown, HelpCircle, Smartphone, RefreshCw, Zap } from "lucide-react";
-import { LandingNav } from "./LandingNav";
-import { LandingFooter } from "./LandingFooter";
+import { ChevronDown, HelpCircle, Smartphone, RefreshCw, Zap, ArrowLeft, ExternalLink } from "lucide-react";
 
 interface HelpPageProps {
   onBackToApp: () => void;
-  onNavigateHelp?: () => void;
   onNavigateTerms?: () => void;
   onNavigatePrivacy?: () => void;
-  onNavigateDemo?: () => void;
   isInstallable?: boolean;
   isInstalled?: boolean;
   onPromptInstall?: () => void;
@@ -21,10 +17,8 @@ interface HelpPageProps {
 
 export const HelpPage: React.FC<HelpPageProps> = ({
   onBackToApp,
-  onNavigateHelp = () => {},
-  onNavigateTerms = () => {},
-  onNavigatePrivacy = () => {},
-  onNavigateDemo,
+  onNavigateTerms,
+  onNavigatePrivacy,
   isInstallable = false,
   onPromptInstall,
   isCheckingUpdate = false,
@@ -39,19 +33,26 @@ export const HelpPage: React.FC<HelpPageProps> = ({
   };
 
   return (
-    <div className="landing-page-root flex flex-col min-h-screen">
-      {/* Landing Navigation Header */}
-      <LandingNav onLaunchApp={onBackToApp} onNavigateDemo={onNavigateDemo} />
+    <div className="container flex flex-col min-h-screen" style={{ paddingTop: "1.25rem", paddingBottom: "3rem", maxWidth: "850px" }}>
+      {/* Top Header Bar with Back Button */}
+      <div className="card flex items-center justify-between flex-wrap gap-3" style={{ backgroundColor: "var(--bg-card)", padding: "0.85rem 1rem", marginBottom: "1.5rem", border: "1px solid var(--border-subtle)" }}>
+        <button className="btn btn-secondary btn-sm flex items-center gap-2" onClick={onBackToApp}>
+          <ArrowLeft size={16} /> Back to App
+        </button>
+        <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: 600 }}>
+          {siteConfig.name} User Guide & FAQ
+        </span>
+      </div>
 
       {/* Main Content Body */}
-      <main className="landing-container flex-1" style={{ paddingTop: "3rem", paddingBottom: "4rem", maxWidth: "850px" }}>
-        {/* Main Page Header */}
-        <div className="card text-center" style={{ backgroundColor: "var(--bg-card)", padding: "2.5rem 1.5rem", marginBottom: "2rem", border: "1px solid var(--border-subtle)" }}>
-          <div style={{ width: "56px", height: "56px", borderRadius: "14px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem" }}>
-            <HelpCircle size={28} />
+      <main className="flex-1">
+        {/* Main Page Header Card */}
+        <div className="card text-center" style={{ backgroundColor: "var(--bg-card)", padding: "2rem 1.25rem", marginBottom: "1.5rem", border: "1px solid var(--border-subtle)" }}>
+          <div style={{ width: "52px", height: "52px", borderRadius: "14px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "var(--accent-primary)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1rem" }}>
+            <HelpCircle size={26} />
           </div>
-          <h1 style={{ fontSize: "2.25rem", marginBottom: "0.5rem" }}>Help & User Guide — {siteConfig.name}</h1>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", maxWidth: "600px", margin: "0 auto 1.25rem", lineHeight: 1.6 }}>
+          <h1 style={{ fontSize: "1.85rem", marginBottom: "0.5rem" }}>Help & User Guide — {siteConfig.name}</h1>
+          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", maxWidth: "600px", margin: "0 auto 1.25rem", lineHeight: 1.6 }}>
             Step-by-step guide on creating trips, adding expenses across 4 split methods, installing home screen app, and working 100% offline.
           </p>
 
@@ -77,7 +78,7 @@ export const HelpPage: React.FC<HelpPageProps> = ({
           </div>
         </div>
 
-        {/* Accordion Guide Sections from help/index.html */}
+        {/* Accordion Guide Sections */}
         <div className="flex flex-col gap-3">
           {/* Section 1: Creating a Trip & Adding Friends */}
           <div className={`faq-item ${openSection === 1 ? "open" : ""}`}>
@@ -141,13 +142,25 @@ export const HelpPage: React.FC<HelpPageProps> = ({
         </div>
       </main>
 
-      {/* Landing Footer */}
-      <LandingFooter
-        onNavigateHelp={onNavigateHelp}
-        onNavigateTerms={onNavigateTerms}
-        onNavigatePrivacy={onNavigatePrivacy}
-        onNavigateDemo={onNavigateDemo}
-      />
+      {/* In-App Footer Bar with Terms & Privacy in New Window */}
+      <div className="card flex items-center justify-between flex-wrap gap-3" style={{ backgroundColor: "var(--bg-card)", marginTop: "2rem", padding: "0.85rem 1rem", fontSize: "0.85rem", color: "var(--text-muted)" }}>
+        <button className="btn btn-secondary btn-sm flex items-center gap-2" onClick={onBackToApp}>
+          <ArrowLeft size={15} /> Back to App
+        </button>
+
+        <div className="flex items-center gap-3">
+          {onNavigateTerms && (
+            <button className="btn btn-ghost btn-sm flex items-center gap-1" onClick={onNavigateTerms} style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+              Terms & Conditions <ExternalLink size={12} />
+            </button>
+          )}
+          {onNavigatePrivacy && (
+            <button className="btn btn-ghost btn-sm flex items-center gap-1" onClick={onNavigatePrivacy} style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+              Privacy Policy <ExternalLink size={12} />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

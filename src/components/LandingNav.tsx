@@ -19,7 +19,22 @@ export const LandingNav: React.FC<LandingNavProps> = ({ onLaunchApp, onNavigateD
     <header className="landing-nav-header">
       <div className="landing-nav-container">
         {/* Brand Logo & Pill */}
-        <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-3"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              if (window.history && window.history.pushState) {
+                const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                const target = isLocalHost ? "/landing" : "/";
+                if (window.location.pathname !== target) {
+                  window.history.pushState({}, "", target);
+                }
+              }
+            }
+          }}
+        >
           <div className="brand-logo-badge">
             <span className="brand-logo-text">{siteConfig.name}</span>
           </div>

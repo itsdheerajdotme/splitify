@@ -4,6 +4,7 @@ import { calculateBalances } from "./domain/balance-engine";
 import { simplifyBalances } from "./domain/simplifier";
 import { IndexedDBSessionRepository, InMemorySessionRepository } from "./repositories/indexeddb-repository";
 import siteConfig from "./config/site.json";
+import { ArrowLeft, Users, ArrowLeftRight, ShieldCheck, Sparkles } from "lucide-react";
 
 import { Navbar } from "./components/Navbar";
 import { SessionList } from "./components/SessionList";
@@ -47,6 +48,11 @@ const repository = typeof indexedDB !== "undefined"
 function getHomeIsLanding(): boolean {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
+    // In local development (localhost / 127.0.0.1):
+    // Default to false (App Mode) so local app debugging works directly on http://localhost:5173/!
+    if (host === "localhost" || host === "127.0.0.1") {
+      return false;
+    }
     if (host.startsWith("app.") || host === "app.splitly.in") {
       return false;
     }
@@ -74,6 +80,7 @@ export function App() {
   // Modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [sessionToDelete, setSessionToDelete] = useState<Session | null>(null);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   // Edit Expense State
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
@@ -91,7 +98,10 @@ export function App() {
     if (tab === "help") targetPath = "/help";
     else if (tab === "terms") targetPath = "/terms";
     else if (tab === "privacy") targetPath = "/privacy";
-    else if (tab === "landing") targetPath = "/";
+    else if (tab === "landing") {
+      const isLocalHost = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+      targetPath = isLocalHost ? "/landing" : "/";
+    }
 
     if (updateHistory && typeof window !== "undefined" && window.history && window.history.pushState) {
       if (window.location.pathname !== targetPath) {
@@ -163,45 +173,26 @@ export function App() {
   useEffect(() => {
     loadSessions();
 
-    const pathname = window.location.pathname.replace(/\/$/, "") || "/";
-    if (pathname === "/demo") {
-      handleTriggerDemo();
-    } else if (pathname === "/help") {
-      setActiveTab("help");
-      applySEO("help");
-    } else if (pathname === "/terms") {
-      setActiveTab("terms");
-      applySEO("terms");
-    } else if (pathname === "/privacy") {
-      setActiveTab("privacy");
-      applySEO("privacy");
-    } else {
-      if (homeIsLanding) {
+    const parseRoute = () => {
+      const pathname = window.location.pathname.replace(/\/$/, "") || "/";
+      const urlParams = new URLSearchParams(window.location.search);
+      const modeParam = urlParams.get("mode");
+
+      if (pathname === "/landing" || modeParam === "landing") {
         setActiveTab("landing");
-      } else {
-        setActiveTab("overview");
-      }
-      applySEO("home");
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const shareParam = urlParams.get("share");
-    if (shareParam) {
-      setPendingShareId(shareParam);
-    }
-
-    // Handle browser Back/Forward navigation
-    const handlePopState = () => {
-      const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
-      if (currentPath === "/demo") {
+        applySEO("home");
+      } else if (pathname === "/demo" || modeParam === "demo") {
         handleTriggerDemo();
-      } else if (currentPath === "/help") {
+      } else if (pathname === "/app" || modeParam === "app") {
+        setActiveTab("overview");
+        applySEO("home");
+      } else if (pathname === "/help") {
         setActiveTab("help");
         applySEO("help");
-      } else if (currentPath === "/terms") {
+      } else if (pathname === "/terms") {
         setActiveTab("terms");
         applySEO("terms");
-      } else if (currentPath === "/privacy") {
+      } else if (pathname === "/privacy") {
         setActiveTab("privacy");
         applySEO("privacy");
       } else {
@@ -212,6 +203,19 @@ export function App() {
         }
         applySEO("home");
       }
+    };
+
+    parseRoute();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareParam = urlParams.get("share");
+    if (shareParam) {
+      setPendingShareId(shareParam);
+    }
+
+    // Handle browser Back/Forward navigation
+    const handlePopState = () => {
+      parseRoute();
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -436,6 +440,30 @@ export function App() {
     );
   }
 
+  const handleGoToMyTrips = () => {
+    if (homeIsLanding) {
+      navigateToTab("landing");
+    } else {
+      setActiveSession(null);
+      navigateToTab("overview");
+    }
+  };
+
+  const openTermsInNewTab = () => {
+    if (typeof window === "undefined") return;
+    const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const url = isLocalHost ? "/terms" : "https://splitly.in/terms";
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const openPrivacyInNewTab = () => {
+    if (typeof window === "undefined") return;
+    const isLocalHost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const url = isLocalHost ? "/privacy" : "https://splitly.in/privacy";
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  // Main Content Body
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {/* Demo Mode Top Banner */}
@@ -449,16 +477,14 @@ export function App() {
       )}
 
       {/* Main Top Header Navbar (Hidden on Standalone Info Pages) */}
-      {currentTab !== "help" && currentTab !== "terms" && currentTab !== "privacy" && (
+      {currentTab !== "terms" && currentTab !== "privacy" && (
         <Navbar
-          onGoHome={() => navigateToTab(homeIsLanding ? "landing" : "overview")}
+          onGoHome={handleGoToMyTrips}
           onOpenHelp={() => navigateToTab("help")}
-          currentSessionName={activeSession?.name}
-          autoSaveStatus={autoSaveStatus}
           isInstallable={pwaInstall.isInstallable}
           isInstalled={pwaInstall.isInstalled}
           hasUpdate={swUpdate.hasUpdate}
-          onPromptInstall={pwaInstall.promptInstall}
+          onPromptInstall={() => setIsInstallModalOpen(true)}
           onApplyUpdate={swUpdate.applyUpdate}
         />
       )}
@@ -498,7 +524,7 @@ export function App() {
         </div>
       )}
 
-      {/* PWA Install Banner */}
+      {/* PWA Install Banner & Feature Dialogue */}
       {currentTab !== "help" && currentTab !== "terms" && currentTab !== "privacy" && (
         <PWAInstallBanner
           isInstallable={pwaInstall.isInstallable}
@@ -509,6 +535,9 @@ export function App() {
           onPromptInstall={pwaInstall.promptInstall}
           hasUpdate={swUpdate.hasUpdate}
           onApplyUpdate={swUpdate.applyUpdate}
+          isInstallModalOpen={isInstallModalOpen}
+          onOpenInstallModal={() => setIsInstallModalOpen(true)}
+          onCloseInstallModal={() => setIsInstallModalOpen(false)}
         />
       )}
 
@@ -517,9 +546,8 @@ export function App() {
         {currentTab === "help" ? (
           <HelpPage
             onBackToApp={() => navigateToTab("overview")}
-            onNavigateHelp={() => navigateToTab("help")}
-            onNavigateTerms={() => navigateToTab("terms")}
-            onNavigatePrivacy={() => navigateToTab("privacy")}
+            onNavigateTerms={openTermsInNewTab}
+            onNavigatePrivacy={openPrivacyInNewTab}
             isInstallable={pwaInstall.isInstallable}
             isInstalled={pwaInstall.isInstalled}
             onPromptInstall={pwaInstall.promptInstall}
@@ -530,14 +558,14 @@ export function App() {
           />
         ) : currentTab === "terms" ? (
           <TermsPage
-            onBackToApp={() => navigateToTab("overview")}
+            onBackToApp={handleLaunchApp}
             onNavigateHelp={() => navigateToTab("help")}
             onNavigateTerms={() => navigateToTab("terms")}
             onNavigatePrivacy={() => navigateToTab("privacy")}
           />
         ) : currentTab === "privacy" ? (
           <PrivacyPage
-            onBackToApp={() => navigateToTab("overview")}
+            onBackToApp={handleLaunchApp}
             onNavigateHelp={() => navigateToTab("help")}
             onNavigateTerms={() => navigateToTab("terms")}
             onNavigatePrivacy={() => navigateToTab("privacy")}
@@ -556,12 +584,61 @@ export function App() {
               navigateToTab("overview");
             }}
             onDeleteSessionPrompt={(s) => setSessionToDelete(s)}
-            isInstallable={pwaInstall.isInstallable}
-            isInstalled={pwaInstall.isInstalled}
-            onPromptInstall={pwaInstall.promptInstall}
           />
         ) : (
           <div className="container" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
+            {/* Sticky Secondary Header for Active Session */}
+            <div
+              className="card flex items-center justify-between flex-wrap gap-3"
+              style={{
+                backgroundColor: "var(--bg-card)",
+                marginBottom: "1.25rem",
+                padding: "0.85rem 1.25rem",
+                border: "1px solid var(--border-subtle)",
+                position: "sticky",
+                top: "57px",
+                zIndex: 700,
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+              }}
+            >
+              {/* Left: All Trips Back Button & Prominent Session Name */}
+              <div className="flex items-center gap-3 min-w-0 flex-wrap">
+                <button
+                  className="btn btn-outline btn-sm flex items-center gap-1.5"
+                  onClick={handleGoToMyTrips}
+                  title="Back to All Trips"
+                >
+                  <ArrowLeft size={15} />
+                  <span>All Trips</span>
+                </button>
+
+                <div className="flex items-center gap-2 min-w-0">
+                  <h1 className="truncate" style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0, lineHeight: 1.2 }}>
+                    {activeSession.name}
+                  </h1>
+
+                  {isDemoActive && (
+                    <span className="badge badge-amber flex items-center gap-1" style={{ fontSize: "0.7rem", padding: "0.2rem 0.5rem", fontWeight: 700, flexShrink: 0 }}>
+                      <Sparkles size={12} /> [Demo]
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Quick Stats & Auto-Save Badge */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="badge badge-subtle flex items-center gap-1" style={{ fontSize: "0.75rem", padding: "0.25rem 0.55rem" }}>
+                  <Users size={12} /> {activeSession.participants.length} Members
+                </span>
+                <span className="badge badge-subtle flex items-center gap-1.5" style={{ fontSize: "0.75rem", padding: "0.25rem 0.6rem" }}>
+                  <ArrowLeftRight size={12} /> {activeSession.expenses.length} Expenses
+                </span>
+                <span className="badge badge-emerald hide-mobile flex items-center gap-1" style={{ fontSize: "0.72rem", padding: "0.25rem 0.55rem" }}>
+                  <ShieldCheck size={12} /> {autoSaveStatus}
+                </span>
+              </div>
+            </div>
+
             {/* NavTabs */}
             <NavTabs
               activeTab={currentTab as "overview" | "transactions" | "add-expense" | "balances" | "settings"}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Smartphone, Download, Share, PlusSquare, X, RefreshCw, CheckCircle2 } from "lucide-react";
+import { Smartphone, Download, Share, PlusSquare, X, RefreshCw, CheckCircle2, Zap, ShieldCheck } from "lucide-react";
 import siteConfig from "../config/site.json";
 
 interface PWAInstallBannerProps {
@@ -11,7 +11,25 @@ interface PWAInstallBannerProps {
   onPromptInstall: () => void;
   hasUpdate: boolean;
   onApplyUpdate: () => void;
+  isInstallModalOpen: boolean;
+  onOpenInstallModal: () => void;
+  onCloseInstallModal: () => void;
 }
+
+const BANNER_SNOOZE_KEY = "pwa_banner_dismissed_until";
+const SNOOZE_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 Days Snooze
+
+const checkIsDismissed = (): boolean => {
+  if (typeof window === "undefined") return false;
+  try {
+    const until = localStorage.getItem(BANNER_SNOOZE_KEY);
+    if (!until) return false;
+    const untilTime = parseInt(until, 10);
+    return Date.now() < untilTime;
+  } catch (_) {
+    return false;
+  }
+};
 
 export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
   isInstallable,
@@ -22,8 +40,19 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
   onPromptInstall,
   hasUpdate,
   onApplyUpdate,
+  isInstallModalOpen,
+  onOpenInstallModal,
+  onCloseInstallModal,
 }) => {
-  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
+  const [isBannerDismissed, setIsBannerDismissed] = useState<boolean>(checkIsDismissed);
+
+  const handleDismissBanner = () => {
+    setIsBannerDismissed(true);
+    try {
+      const snoozeUntil = Date.now() + SNOOZE_DURATION_MS;
+      localStorage.setItem(BANNER_SNOOZE_KEY, snoozeUntil.toString());
+    } catch (_) {}
+  };
 
   return (
     <>
@@ -78,7 +107,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         </div>
       )}
 
-      {/* 2. Dismissable Desktop / Mobile Install Banner */}
+      {/* 2. Dismissable Single Desktop / Mobile Install Banner */}
       {isInstallable && !isInstalled && !isBannerDismissed && (
         <div
           style={{
@@ -121,13 +150,13 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               className="btn btn-primary btn-sm"
-              onClick={onPromptInstall}
+              onClick={onOpenInstallModal}
               style={{ fontSize: "0.8rem", padding: "0.35rem 0.75rem" }}
             >
               <Download size={14} /> Install
             </button>
             <button
-              onClick={() => setIsBannerDismissed(true)}
+              onClick={handleDismissBanner}
               style={{
                 background: "none",
                 border: "none",
@@ -135,7 +164,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
                 cursor: "pointer",
                 padding: "0.25rem",
               }}
-              title="Dismiss"
+              title="Dismiss for 7 days"
             >
               <X size={18} />
             </button>
@@ -143,7 +172,153 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         </div>
       )}
 
-      {/* 3. iOS Add to Home Screen Instructions Modal */}
+      {/* 3. Interactive App Installation Feature Dialogue / Modal */}
+      {isInstallModalOpen && (
+        <div
+          className="modal-overlay"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            padding: "1rem",
+          }}
+          onClick={onCloseInstallModal}
+        >
+          <div
+            className="card"
+            style={{
+              backgroundColor: "var(--bg-card)",
+              maxWidth: "460px",
+              width: "100%",
+              borderRadius: "16px",
+              padding: "1.5rem",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={onCloseInstallModal}
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                background: "none",
+                border: "none",
+                color: "var(--text-muted)",
+                cursor: "pointer",
+              }}
+            >
+              <X size={20} />
+            </button>
+
+            <div className="text-center" style={{ marginBottom: "1.25rem" }}>
+              <img
+                src="/logo-128.png"
+                alt={`${siteConfig.name} Logo`}
+                style={{ width: "56px", height: "56px", borderRadius: "14px", margin: "0 auto 0.5rem" }}
+              />
+              <h3 style={{ fontSize: "1.35rem", marginBottom: "0.25rem" }}>
+                Install {siteConfig.name} App
+              </h3>
+              <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+                Enjoy fast, 100% offline group expense calculations directly from your home screen.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3" style={{ fontSize: "0.88rem", marginBottom: "1.5rem" }}>
+              {/* Feature 1 */}
+              <div
+                className="flex items-center gap-3"
+                style={{
+                  backgroundColor: "var(--bg-input)",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                <div style={{ color: "#10b981", flexShrink: 0 }}>
+                  <Zap size={22} />
+                </div>
+                <div>
+                  <strong>100% Offline Access</strong>
+                  <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                    Works anytime without internet connection or cellular data.
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 2 */}
+              <div
+                className="flex items-center gap-3"
+                style={{
+                  backgroundColor: "var(--bg-input)",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                <div style={{ color: "#3b82f6", flexShrink: 0 }}>
+                  <ShieldCheck size={22} />
+                </div>
+                <div>
+                  <strong>100% Private & Device-Only</strong>
+                  <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                    No accounts or servers. Your data stays saved inside your browser.
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature 3 */}
+              <div
+                className="flex items-center gap-3"
+                style={{
+                  backgroundColor: "var(--bg-input)",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                <div style={{ color: "#8b5cf6", flexShrink: 0 }}>
+                  <Smartphone size={22} />
+                </div>
+                <div>
+                  <strong>Home Screen Shortcut</strong>
+                  <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                    Launches like a native mobile or desktop app in 1 tap.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                className="btn btn-outline flex-1"
+                onClick={onCloseInstallModal}
+              >
+                Maybe Later
+              </button>
+              <button
+                className="btn btn-primary flex-1"
+                onClick={() => {
+                  onCloseInstallModal();
+                  onPromptInstall();
+                }}
+              >
+                <Download size={16} /> Install App Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. iOS Add to Home Screen Instructions Modal */}
       {showIOSGuide && (
         <div
           className="modal-overlay"
@@ -192,11 +367,11 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
             <div className="text-center" style={{ marginBottom: "1.25rem" }}>
               <img
                 src="/logo-128.png"
-                alt="Splitify Logo"
+                alt={`${siteConfig.name} Logo`}
                 style={{ width: "56px", height: "56px", borderRadius: "14px", margin: "0 auto 0.5rem" }}
               />
               <h3 style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}>
-                Add Splitify to Home Screen
+                Add {siteConfig.name} to Home Screen
               </h3>
               <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
                 {isIOS
@@ -261,7 +436,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
                 <div>
                   <strong>3. Tap 'Add' in Top Right</strong>
                   <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-                    Splitify will appear on your home screen and work 100% offline!
+                    {siteConfig.name} will appear on your home screen and work 100% offline!
                   </div>
                 </div>
               </div>
