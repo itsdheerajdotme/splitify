@@ -1,11 +1,11 @@
 {
   "site": {
-    "name": "splitly",
+    "name": "Splitly",
     "domainUrl": "https://splitly.in",
-    "tagline": "Forever free, forever private, forever yours.",
-    "defaultTitle": "splitly — Free, Private & Offline Group Expense Splitter",
-    "defaultDescription": "Fast, private, browser-first shared expense calculator for trips, dinners, outings, and roommate expenses. Equal, percentage, or custom splits with zero backend storage.",
-    "defaultKeywords": "expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, Splitwise alternative private, group expense tracker, add to home screen app",
+    "tagline": "Forever free, 100% private, zero sign-up.",
+    "defaultTitle": "Splitly — Free, Private & Instant Group Expense Splitter",
+    "defaultDescription": "Fast, private shared expense calculator for trips, dinners, vacations, and roommate bills. Calculate equal, percentage, or custom bill splits instantly without sign-up or account creation.",
+    "defaultKeywords": "expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, private Splitwise alternative, group expense tracker, split vacation bills",
     "author": "@itsdheeraj.me",
     "themeColor": "#0f172a",
     "ogImage": "/logo-512.png",
@@ -16,27 +16,27 @@
   "pages": {
     "home": {
       "path": "/",
-      "title": "splitly — Free, Private & Offline Group Expense Splitter",
-      "description": "splitly is a fast, 100% private, browser-first expense splitter for trips, dinners, and roommates. Calculate equal, percentage, or custom bill splits without logins or backend tracking. Add to home screen for native offline experience.",
-      "keywords": "expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, Splitwise alternative private, group expense tracker, offline app",
+      "title": "Splitly — Free, Private & Instant Group Expense Splitter",
+      "description": "Splitly is a fast, 100% private expense calculator for trips, dinners, and roommate bills. Calculate equal, percentage, or custom bill splits without creating an account or sharing personal details. Works anytime, even offline.",
+      "keywords": "expense splitter, split bills offline, free bill split calculator, shared group expenses, trip cost calculator, Splitwise alternative private, group expense tracker, offline bill app",
       "canonical": "https://splitly.in/",
       "og": {
-        "title": "splitly — Zero-Backend Shared Expense Calculator",
-        "description": "Fast, private, browser-first expense calculator for trips, dinners, and group outings.",
+        "title": "Splitly — Fast & Private Group Expense Calculator",
+        "description": "Simple, private bill splitting for vacations, dinners, and shared housing with no sign-up needed.",
         "type": "website",
         "url": "https://splitly.in/",
         "image": "https://splitly.in/logo-512.png"
       },
       "twitter": {
         "card": "summary_large_image",
-        "title": "splitly — Free & Private Expense Splitter",
-        "description": "Calculate equal, percentage, or custom bill splits 100% offline in your browser or home screen app.",
+        "title": "Splitly — Free & Private Expense Splitter",
+        "description": "Calculate equal, percentage, or custom bill splits 100% privately on your phone or computer.",
         "image": "https://splitly.in/logo-512.png"
       },
       "jsonLd": {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "splitly",
+        "name": "Splitly",
         "operatingSystem": "All",
         "applicationCategory": "FinanceApplication",
         "offers": {
@@ -44,53 +44,53 @@
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "Browser-first, private shared expense calculator for trips, dinners, and group expenses.",
+        "description": "Private, hassle-free shared expense calculator for trips, dinners, and group expenses.",
         "url": "https://splitly.in/"
       }
     },
     "demo": {
       "path": "/demo",
-      "title": "Interactive Demo — Test Group Expense Splitting | splitly",
-      "description": "Experience Splitly's 100% private expense calculation engine with a pre-loaded 12-transaction trip demo. Edit expenses, test debt simplification, and see instant settlement math.",
-      "keywords": "interactive expense demo, splitwise demo alternative, test bill split calculator, offline trip expense demo",
+      "title": "Try Interactive Demo — Instant Group Bill Calculator | Splitly",
+      "description": "Experience Splitly live with our interactive sample trip. Easily add shared expenses, test custom split modes, and see automatic repayment totals instantly.",
+      "keywords": "interactive expense demo, splitwise demo alternative, test bill split calculator, trip expense demo",
       "canonical": "https://app.splitly.in/demo",
       "og": {
-        "title": "Interactive Demo — splitly Expense Splitter",
-        "description": "Test live group bill calculations, split modes, and debt simplification with our 12-transaction interactive demo.",
+        "title": "Try Interactive Demo — Splitly Expense Calculator",
+        "description": "Explore live bill splitting, custom share options, and smart repayment summaries with our interactive demo trip.",
         "type": "website",
         "url": "https://app.splitly.in/demo",
         "image": "https://splitly.in/logo-512.png"
       },
       "twitter": {
         "card": "summary_large_image",
-        "title": "Interactive Demo — splitly",
-        "description": "Test live bill splitting and debt simplification with our interactive demo trip.",
+        "title": "Try Interactive Demo — Splitly",
+        "description": "Test live bill splitting and instant debt simplification with our interactive demo trip.",
         "image": "https://splitly.in/logo-512.png"
       },
       "jsonLd": {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Interactive Demo",
-        "description": "Interactive demo session for testing Splitly zero-backend group expense calculations.",
+        "description": "Interactive demo trip for testing Splitly's instant group expense calculator.",
         "url": "https://app.splitly.in/demo"
       }
     },
     "help": {
       "path": "/help",
-      "title": "Help & Guide — How to Split Expenses Offline | splitly",
-      "description": "Step-by-step instructions on creating trip sessions, 4 bill split modes (Equal, %, Shares, Custom), adding to home screen for native offline experience, generating 24-hr share links, and managing offline data.",
-      "keywords": "how to split bills, expense splitter tutorial, equal bill split guide, add to home screen offline app, offline trip bill calculator guide",
+      "title": "Help & Guide — How to Split Group Expenses | Splitly",
+      "description": "Step-by-step guide on creating trip sessions, 4 flexible bill split modes (Equal, %, Shares, Custom), saving to your phone home screen, and sharing trip summaries with friends.",
+      "keywords": "how to split bills, expense splitter guide, equal bill split tutorial, trip expense calculator help, split group expenses guide",
       "canonical": "https://splitly.in/help/",
       "og": {
-        "title": "Help & User Guide — splitly Expense Splitter",
-        "description": "Learn how to calculate group balances, add to home screen for 100% offline usage, and share trip links securely.",
+        "title": "Help & User Guide — Splitly Expense Calculator",
+        "description": "Learn how to split group expenses, save Splitly to your phone home screen for offline use, and share trip summaries.",
         "type": "article",
         "url": "https://splitly.in/help/",
         "image": "https://splitly.in/logo-512.png"
       },
       "twitter": {
         "card": "summary_large_image",
-        "title": "Help & Guide — splitly",
+        "title": "Help & Guide — Splitly",
         "description": "Step-by-step user guide for splitting trip expenses, managing group balances, and offline usage.",
         "image": "https://splitly.in/logo-512.png"
       },
@@ -100,10 +100,10 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "How does splitly calculate group balances?",
+            "name": "How does Splitly calculate group balances?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "splitly uses an intelligent greedy debt simplification algorithm to minimize total payments between group members into the fewest possible direct transactions."
+              "text": "Splitly automatically totals all individual expenses and minimizes payments so your group only needs to make the fewest possible direct repayments."
             }
           },
           {
@@ -111,7 +111,7 @@
             "name": "Is my financial expense data stored on a central server?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. splitly stores 100% of your session and expense data locally inside your device browser using IndexedDB. No accounts or server logins are required."
+              "text": "No. Splitly saves your trip data directly on your device. You never need to sign up, log in, or share passwords."
             }
           },
           {
@@ -119,15 +119,15 @@
             "name": "How do temporary trip share links work?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "When you generate a share link, a temporary copy of your trip data is uploaded for 24 hours. Friends can import the trip directly into their browser, after which the link automatically expires and deletes itself."
+              "text": "When you generate a share link, a temporary copy of your trip is encrypted for 24 hours. Friends can import the trip to their device, after which the link automatically self-destructs."
             }
           },
           {
             "@type": "Question",
-            "name": "Can I use splitly without an internet connection?",
+            "name": "Can I use Splitly without an internet connection?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Yes! You can add splitly to your phone's home screen with 1 tap for a full native app experience. It runs completely offline without internet."
+              "text": "Yes! You can add Splitly to your phone's home screen with 1 tap. It works 100% offline wherever you go."
             }
           }
         ]
@@ -135,55 +135,55 @@
     },
     "terms": {
       "path": "/terms",
-      "title": "Terms & Conditions — Data Ownership & Usage | splitly",
-      "description": "splitly terms of service, client-side local storage disclaimers, transaction link and JSON/CSV exported data disclaimers, user responsibility for PII, and legal immunity clauses.",
-      "keywords": "splitly terms of service, expense splitter legal terms, client side data policy, transaction link disclaimer, exported data JSON CSV disclaimer, splitly usage terms",
+      "title": "Terms & Conditions — User Agreement & Data Privacy | Splitly",
+      "description": "Review Splitly's terms of service, user guidelines, and privacy disclaimers for managing shared group expenses and trip summaries.",
+      "keywords": "splitly terms of service, expense splitter terms, group bill calculator policy, splitly usage terms",
       "canonical": "https://splitly.in/terms/",
       "og": {
-        "title": "Terms & Conditions — splitly",
-        "description": "Terms of service, client-side data disclaimers, transaction links and exported data (JSON/CSV) user responsibility, and legal immunity policies for splitly.",
+        "title": "Terms & Conditions — Splitly",
+        "description": "Terms of service, user responsibility, and privacy disclaimers for Splitly.",
         "type": "website",
         "url": "https://splitly.in/terms/",
         "image": "https://splitly.in/logo-512.png"
       },
       "twitter": {
         "card": "summary",
-        "title": "Terms & Conditions — splitly",
-        "description": "Review splitly's software terms, transaction link & exported data disclaimers, and legal immunity guidelines.",
+        "title": "Terms & Conditions — Splitly",
+        "description": "Review Splitly's terms of service, trip share disclaimers, and user privacy guidelines.",
         "image": "https://splitly.in/logo-512.png"
       },
       "jsonLd": {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Terms and Conditions",
-        "description": "Legal terms, transaction link & exported JSON/CSV data disclaimers, and user agreement for splitly zero-backend expense calculator.",
+        "description": "Legal terms and user agreement for Splitly shared expense calculator.",
         "url": "https://splitly.in/terms/"
       }
     },
     "privacy": {
       "path": "/privacy",
-      "title": "Privacy Policy — Zero Cloud Data Retention | splitly",
-      "description": "splitly privacy policy. Zero server PII collection, user responsibility for transaction links and exported JSON/CSV data, and complete privacy disclaimers.",
-      "keywords": "splitly privacy policy, private expense splitter, zero server PII storage, transaction link disclaimer, exported JSON CSV disclaimer, browser local storage privacy",
+      "title": "Privacy Policy — 100% Private Expense Splitting | Splitly",
+      "description": "Read Splitly's privacy policy. Your financial expenses and group names stay entirely on your device — zero sign-up, zero tracking, and zero personal data collected.",
+      "keywords": "splitly privacy policy, private expense splitter, zero tracking expense app, private group bill calculator",
       "canonical": "https://splitly.in/privacy/",
       "og": {
-        "title": "Privacy Policy — splitly",
-        "description": "100% Client-Side Privacy Policy. Zero PII storage, user responsibility for transaction links & exported files, and complete disclaimers.",
+        "title": "Privacy Policy — Splitly",
+        "description": "100% Private Expense Splitting. Zero tracking, zero account required, and complete device-only storage.",
         "type": "website",
         "url": "https://splitly.in/privacy/",
         "image": "https://splitly.in/logo-512.png"
       },
       "twitter": {
         "card": "summary",
-        "title": "Privacy Policy — splitly",
-        "description": "Read our zero-tracking privacy policy, transaction link & exported data disclaimers, and legal immunity guidelines.",
+        "title": "Privacy Policy — Splitly",
+        "description": "Read our zero-tracking privacy policy and device-first data protection guidelines.",
         "image": "https://splitly.in/logo-512.png"
       },
       "jsonLd": {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": "Privacy Policy",
-        "description": "Privacy disclosure detailing zero PII storage, transaction link & exported JSON/CSV data disclaimers, and local browser persistence.",
+        "description": "Privacy policy detailing zero personal data collection and device-first persistence for Splitly.",
         "url": "https://splitly.in/privacy/"
       }
     }
