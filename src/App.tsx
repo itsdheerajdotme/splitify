@@ -44,11 +44,24 @@ const repository = typeof indexedDB !== "undefined"
   ? new IndexedDBSessionRepository()
   : new InMemorySessionRepository();
 
+function getHomeIsLanding(): boolean {
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host.startsWith("app.") || host === "app.splitly.in") {
+      return false;
+    }
+    if (host === "splitly.in" || (host.endsWith("splitly.in") && !host.startsWith("app."))) {
+      return true;
+    }
+  }
+  return siteConfig.routing?.homeMode === "landing";
+}
+
 export function App() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSession, setActiveSession] = useState<Session | null>(null);
 
-  const homeIsLanding = siteConfig.routing?.homeMode === "landing";
+  const homeIsLanding = getHomeIsLanding();
   const [activeTab, setActiveTab] = useState<TabType>(homeIsLanding ? "landing" : "overview");
 
   // PWA & Service Worker hooks
@@ -91,16 +104,20 @@ export function App() {
 
   // Launch real app or navigate to app URL from site.json
   const handleLaunchApp = () => {
-    if (siteConfig.appUrl) {
-      try {
-        const targetUrl = new URL(siteConfig.appUrl, window.location.href).href;
-        if (window.location.href !== targetUrl && !window.location.href.startsWith(targetUrl)) {
+    if (siteConfig.appUrl && typeof window !== "undefined") {
+      const host = window.location.hostname;
+      const isLocalHost = host === "localhost" || host === "127.0.0.1";
+      if (!isLocalHost) {
+        try {
+          const targetUrl = new URL(siteConfig.appUrl, window.location.href).href;
+          if (window.location.href !== targetUrl && !window.location.href.startsWith(targetUrl)) {
+            window.location.href = siteConfig.appUrl;
+            return;
+          }
+        } catch (_) {
           window.location.href = siteConfig.appUrl;
           return;
         }
-      } catch (_) {
-        window.location.href = siteConfig.appUrl;
-        return;
       }
     }
     setActiveTab("overview");
@@ -112,16 +129,20 @@ export function App() {
 
   // Handle Demo Mode launch / reset or navigate to demo URL from site.json
   const handleTriggerDemo = async () => {
-    if (siteConfig.demoUrl) {
-      try {
-        const targetUrl = new URL(siteConfig.demoUrl, window.location.href).href;
-        if (window.location.href !== targetUrl && !window.location.href.startsWith(targetUrl)) {
+    if (siteConfig.demoUrl && typeof window !== "undefined") {
+      const host = window.location.hostname;
+      const isLocalHost = host === "localhost" || host === "127.0.0.1";
+      if (!isLocalHost) {
+        try {
+          const targetUrl = new URL(siteConfig.demoUrl, window.location.href).href;
+          if (window.location.href !== targetUrl && !window.location.href.startsWith(targetUrl)) {
+            window.location.href = siteConfig.demoUrl;
+            return;
+          }
+        } catch (_) {
           window.location.href = siteConfig.demoUrl;
           return;
         }
-      } catch (_) {
-        window.location.href = siteConfig.demoUrl;
-        return;
       }
     }
     try {
