@@ -264,11 +264,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </p>
           </div>
 
-          <div className="grid-3" style={{ gap: "1.5rem" }}>
+          <div className="grid-3" style={{ gap: "1.25rem" }}>
             {landingConfig.features.map((feat) => (
               <div key={feat.id} className="card feature-card">
-                <div className="feature-icon-wrapper">{renderFeatureIcon(feat.icon)}</div>
-                <h3 className="feature-card-title">{feat.title}</h3>
+                <div className="feature-card-header flex items-center gap-3">
+                  <div className="feature-icon-wrapper" style={{ marginBottom: 0 }}>{renderFeatureIcon(feat.icon)}</div>
+                  <h3 className="feature-card-title" style={{ marginBottom: 0 }}>{feat.title}</h3>
+                </div>
                 <p className="feature-card-desc">{feat.description}</p>
               </div>
             ))}
@@ -276,14 +278,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Add to Home Screen Native App Spotlight Banner */}
           <div className="card text-center" style={{ marginTop: "2.5rem", backgroundColor: "rgba(16, 185, 129, 0.08)", borderColor: "var(--accent-primary)", padding: "2rem 1.5rem" }}>
-            <div className="flex items-center justify-center gap-2" style={{ marginBottom: "0.5rem" }}>
+            <div className="flex items-center justify-center gap-2 flex-wrap" style={{ marginBottom: "0.5rem" }}>
               <Smartphone size={24} color="var(--accent-primary)" />
               <h3 style={{ fontSize: "1.25rem", margin: 0 }}>Install as an App for a 100% Native Experience</h3>
             </div>
             <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", maxWidth: "650px", margin: "0.5rem auto 1.25rem", lineHeight: 1.6 }}>
               Add Splitly to your phone's home screen with 1 tap. Launch instantly like a native app, split expenses anywhere completely offline, and enjoy zero lag.
             </p>
-            <button className="btn btn-primary btn-sm" onClick={onLaunchApp}>
+            <button className="btn btn-primary" onClick={onLaunchApp} style={{ maxWidth: "100%" }}>
               <Zap size={16} /> Add to Home Screen & Start Free
             </button>
           </div>

@@ -58,33 +58,33 @@
     "rows": [
       {
         "feature": "Account / Sign-Up Required",
-        "splitly": "❌ No (Instant Start)",
-        "others": "✅ Mandatory Email/Phone"
+        "splitly": "No (Instant Start)",
+        "others": "Mandatory Email/Phone"
       },
       {
         "feature": "Data Storage Location",
-        "splitly": "🔒 100% Local Device (IndexedDB)",
-        "others": "☁ Central Cloud Servers"
+        "splitly": "100% Local Device (IndexedDB)",
+        "others": "Central Cloud Servers"
       },
       {
         "feature": "Subscription & Paywalls",
-        "splitly": "🆓 100% Forever Free",
-        "others": "💰 Pro Tiers & Daily Limits"
+        "splitly": "100% Forever Free",
+        "others": "Pro Tiers & Daily Limits"
       },
       {
         "feature": "Offline Experience",
-        "splitly": "⚡ 100% Offline (Add to Home Screen)",
-        "others": "⚠️ Limited / Internet Needed"
+        "splitly": "100% Offline Ready",
+        "others": "Limited / Internet Required"
       },
       {
         "feature": "Data Privacy & Tracking",
-        "splitly": "🛡️ Zero Tracking / Ads",
-        "others": "📊 Behavioral & Ad Analytics"
+        "splitly": "Zero Tracking / Ads",
+        "others": "Behavioral & Ad Analytics"
       },
       {
         "feature": "Data Export",
-        "splitly": "📁 1-Click JSON & CSV Export",
-        "others": "🔒 Locked / Account Restricted"
+        "splitly": "1-Click JSON & CSV Export",
+        "others": "Locked / Account Restricted"
       }
     ]
   },
