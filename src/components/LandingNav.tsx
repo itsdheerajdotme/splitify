@@ -36,6 +36,18 @@ export const LandingNav: React.FC<LandingNavProps> = ({ onLaunchApp, onNavigateD
           }}
         >
           <div className="brand-logo-badge">
+            <img
+              src="/logo-64.png"
+              alt={siteConfig.name}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "8px",
+                objectFit: "cover",
+                border: "1px solid var(--border-subtle)",
+                flexShrink: 0,
+              }}
+            />
             <span className="brand-logo-text">{siteConfig.name}</span>
           </div>
           <span className="badge badge-emerald hidden-mobile">

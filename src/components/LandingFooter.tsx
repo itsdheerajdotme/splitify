@@ -21,9 +21,23 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({
         <div className="grid-3" style={{ gap: "2rem", marginBottom: "2rem" }}>
           {/* Brand Info */}
           <div>
-            <h3 style={{ fontSize: "1.25rem", color: "var(--accent-primary)", marginBottom: "0.5rem" }}>
-              {siteConfig.name}
-            </h3>
+            <div className="flex items-center gap-2" style={{ marginBottom: "0.5rem" }}>
+              <img
+                src="/logo-64.png"
+                alt={siteConfig.name}
+                style={{
+                  width: "28px",
+                  height: "28px",
+                  borderRadius: "6px",
+                  objectFit: "cover",
+                  border: "1px solid var(--border-subtle)",
+                  flexShrink: 0,
+                }}
+              />
+              <h3 style={{ fontSize: "1.25rem", color: "var(--accent-primary)", margin: 0 }}>
+                {siteConfig.name}
+              </h3>
+            </div>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.5, marginBottom: "1rem" }}>
               {siteConfig.tagline}
             </p>
