@@ -11,7 +11,7 @@ function updateSwVersionPlugin() {
       const swPath = path.resolve(__dirname, 'dist/sw.js')
       if (fs.existsSync(swPath)) {
         let content = fs.readFileSync(swPath, 'utf-8')
-        const buildVersion = `splitify-v${Date.now()}`
+        const buildVersion = `splitly-v${Date.now()}`
         content = content.replace(/const CACHE_NAME = ['"][^'"]+['"];/, `const CACHE_NAME = '${buildVersion}';`)
         fs.writeFileSync(swPath, content, 'utf-8')
         console.log(`[SW Plugin] Updated dist/sw.js CACHE_NAME to ${buildVersion}`)

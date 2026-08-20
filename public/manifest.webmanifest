@@ -1,13 +1,14 @@
 {
-  "name": "Splitify — Zero-Backend Expense Splitter",
-  "short_name": "Splitify",
-  "description": "Fast, private, browser-first shared expense calculator for trips, dinners, and group events.",
+  "name": "Splitly — Free & Private Expense Splitter",
+  "short_name": "Splitly",
+  "description": "Fast, private, browser-first shared expense calculator for trips, dinners, outings, and roommate expenses.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "orientation": "portrait-primary",
   "scope": "/",
+  "categories": ["finance", "utilities", "productivity"],
   "icons": [
     {
       "src": "/logo-32.png",
