@@ -137,6 +137,13 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
 }
 
+.btn-sm,
+.btn-xs,
+.btn-icon {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .btn-primary {
   background-color: var(--accent-primary);
   color: var(--text-inverse);
@@ -872,7 +879,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2rem;
   }
 
-  .btn {
+  .btn-wrap {
     white-space: normal;
     text-align: center;
     word-break: break-word;

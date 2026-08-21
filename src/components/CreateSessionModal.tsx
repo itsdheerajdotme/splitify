@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, X, Users, UserPlus } from "lucide-react";
+import { getRandomDefaultParticipants } from "../utils/placeholder-names";
 
 interface CreateSessionModalProps {
   isOpen: boolean;
@@ -14,7 +15,15 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
 }) => {
   const [name, setName] = useState("");
   const [participantInput, setParticipantInput] = useState("");
-  const [participants, setParticipants] = useState<string[]>(["Dheeraj", "Amit", "Rahul"]);
+  const [participants, setParticipants] = useState<string[]>(getRandomDefaultParticipants);
+
+  useEffect(() => {
+    if (isOpen) {
+      setName("");
+      setParticipantInput("");
+      setParticipants(getRandomDefaultParticipants());
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -32,7 +41,7 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onCreate(name.trim(), participants.length > 0 ? participants : ["Dheeraj", "Participant 2"]);
+    onCreate(name.trim(), participants.length > 0 ? participants : getRandomDefaultParticipants());
     setName("");
     onClose();
   };
@@ -80,7 +89,7 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                   }
                 }}
               />
-              <button type="button" className="btn btn-secondary" onClick={handleAddParticipant}>
+              <button type="button" className="btn btn-secondary" onClick={handleAddParticipant} style={{ flexShrink: 0, whiteSpace: "nowrap" }}>
                 <UserPlus size={16} /> Add
               </button>
             </div>

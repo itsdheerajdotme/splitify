@@ -151,7 +151,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
             <button
               className="btn btn-primary btn-sm"
               onClick={onOpenInstallModal}
-              style={{ fontSize: "0.8rem", padding: "0.35rem 0.75rem" }}
+              style={{ fontSize: "0.8rem", padding: "0.35rem 0.75rem", whiteSpace: "nowrap", flexShrink: 0 }}
             >
               <Download size={14} /> Install
             </button>
